@@ -47,14 +47,21 @@ firebase apps:create web
 firebase apps:sdkconfig WEB > firebase.config.json
 ```
 
-Deploy the database and website!
+Deploy the database and website.
 
 ```
 firebase deploy
 ```
 
-**Last step**: copy the "Hosting URL" and set the url parameter in epoch.config.ts
+Copy the "Hosting URL" and set the url parameter in epoch.config.ts
 (this should be automated in future versions).
+
+Finally, commit your configuration files. **Note:** you may get a warning from GitHub about an exposed secret (the firebase apiKey). This is a false alarm; the api key is intended to be public.
+
+```
+git add .firebaserc firebase.config.json epoch.config.ts 
+git commit -m 'firebase configuration'
+```
 
 
 ### Development environment
