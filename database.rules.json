@@ -2,7 +2,7 @@
   /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   // TODO: actual data protection rules
   "rules": {
-    ".read": "now < 1765007830000",  // 2025-12-06
-    ".write": "now < 1765007830000"  // 2025-12-06
+    ".read": "now < 1893474000000",  // 2030-01-01
+    ".write": "now < 1893474000000"  // 2030-01-01
   }
 }
