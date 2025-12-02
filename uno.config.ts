@@ -3,7 +3,7 @@ import { colors as unoColors } from 'unocss/preset-mini'
 import { cartesian } from './core/utils/array'
 // import extractorMdc from '@unocss/extractor-mdc'
 
-const colors = 'red yellow green blue purple gray'.split(' ')
+const colors = 'primary red yellow green blue orange purple gray'.split(' ')
 const lightnesses = '100 200 300 400 500 600 700 800 900'.split(' ')
 const btnSizes = 'xs sm lg'.split(' ')
 const textSizes = '2xs xs sm base lg xl 2xl 3xl 4xl'.split(' ')
@@ -41,7 +41,9 @@ export default defineConfig({
   safelist: [
     ...cartesian(colors, lightnesses).map(([c, l]) => `bg-${c}-${l}`),
     ...cartesian(colors, lightnesses).map(([c, l]) => `text-${c}-${l}`),
+    ...colors.map(c => `btn-${c}`),
     ...btnSizes.map(s => `btn-${s}`),
+    ...cartesian(colors, btnSizes).map(([c, s]) => `btn-${c}-${s}`),
     ...textSizes.map(s => `text-${s}`),
   ],
   presets: [
