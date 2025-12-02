@@ -1,0 +1,26 @@
+/* custom styles; can be overriden on a per-project basis */
+
+strong {
+  font-weight: 700;
+  @apply text-primary;
+}
+
+/* NOTE: margin-top is set to 0 in core/app.vue (should not be overriden) */
+h1 {
+  margin-bottom: 0.5em;
+}
+h2 {
+  margin-bottom: 0.4em;
+}
+h3, h4, h5, h6 {
+ margin-bottom: 0.3em
+}
+
+p {
+  margin-bottom: 0.5em;
+}
+
+a {
+  @apply text-blue-500 underline;
+  text-decoration-thickness: 1px
+}

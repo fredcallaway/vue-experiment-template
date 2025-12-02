@@ -1,0 +1,38 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "bun nuxt typecheck",
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3030",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "stimuli": "bun scripts/generate-key-states.ts",
+    "deploy": "bun run generate && firebase deploy",
+    "fetch-data": "bun scripts/fetchData.ts",
+    "prolific": "bun scripts/prolific.ts"
+  },
+  "dependencies": {
+    "@nuxt/eslint": "1.4.1",
+    "@vueuse/nuxt": "13.4.0",
+    "eslint": "^9.0.0",
+    "firebase": "^11.9.1",
+    "nuxt": "^3.17.5",
+    "random": "^5.4.0",
+    "remeda": "^2.23.2",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1",
+    "zod": "^4.1.12"
+  },
+  "overrides": {
+    "css-select": "5.1.0"
+  },
+  "devDependencies": {
+    "vue-tsc": "3.1.5",
+    "@iconify-json/mdi": "^1.2.3",
+    "@unocss/nuxt": "^66.3.2",
+    "unocss": "^66.3.2"
+  }
+}
