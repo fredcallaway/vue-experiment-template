@@ -50,7 +50,7 @@ firebase apps:sdkconfig WEB > firebase.config.json
 Deploy the database and website.
 
 ```
-firebase deploy
+bun run deploy
 ```
 
 Copy the "Hosting URL" and set the url parameter in epoch.config.ts
