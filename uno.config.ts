@@ -1,9 +1,9 @@
-import { defineConfig, presetAttributify, presetWind3, transformerDirectives, presetIcons} from 'unocss'
+import { defineConfig, presetAttributify, presetWind4, transformerDirectives, presetIcons} from 'unocss'
 import { colors as unoColors } from 'unocss/preset-mini'
 import { cartesian } from './core/utils/array'
 // import extractorMdc from '@unocss/extractor-mdc'
 
-const colors = 'primary red yellow green blue orange purple gray'.split(' ')
+const colors = 'primary red orange yellow green blue purple gray'.split(' ')
 const lightnesses = '100 200 300 400 500 600 700 800 900'.split(' ')
 const btnSizes = 'xs sm lg'.split(' ')
 const textSizes = '2xs xs sm base lg xl 2xl 3xl 4xl'.split(' ')
@@ -13,30 +13,35 @@ export default defineConfig({
     // custom the default background
     {
       'debug': 'outline outline-3 outline-red',
-      'btn': `
-        text-white rounded-md border-none px-4 py-2 text-lg bg-primary
+      'btnbase': `
+        rounded-md border-none px-4 py-2 text-lg text-white
         active:translate-y-0.1 active:scale-98 transition-transform duration-75
         hover:cursor-pointer
         disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
       `,
+      'btn': 'btnbase bg-gray hover:bg-gray-500',
       'card': 'p-4 rounded-lg',
       'flex-center': 'flex flex-wrap justify-center items-center',
-      'border': 'border-solid border-1',
-      'border-thick': 'border-solid border-4', // TODO fix elsewhere
       'input': 'border border-2 px-3 py-1 box-border bg-white',
       'input-mono': 'border-2 px-3 py-2 box-border font-mono text-xs',
     },
-    [/^border-(.+)$/, ([, d]) => `border-solid border-${d}`],
-    [/^btn-(.+)$/, ([, c]) => `btn bg-${c} hover:bg-${c}-500`],
-    [/^btn-(.+)-(.+)$/, ([, c, s]) => `btn-${c} btn-${s}`],
+    {
+      'btn-primary': 'btnbase bg-primary! hover:bg-primary-500!',
+      'btn-red': 'btnbase bg-red! hover:bg-red-500!',
+      'btn-orange': 'btnbase bg-orange! hover:bg-orange-500!',
+      'btn-yellow': 'btnbase bg-yellow! hover:bg-yellow-500!',
+      'btn-green': 'btnbase bg-green! hover:bg-green-500!',
+      'btn-blue': 'btnbase bg-blue! hover:bg-blue-500!',
+      'btn-purple': 'btnbase bg-purple! hover:bg-purple-500!',
+      'btn-gray': 'btnbase bg-gray! hover:bg-gray-500!',
+      'btn-xs': 'btn px-1 py-0.5 text-sm',
+      'btn-sm': 'btn px-2 py-1 text-base',
+      'btn-lg': 'btn px-6 py-3 text-2xl',
+    },
+    [/^btn-(.+)-(.+)$/, ([, c, s]) => `btn-${s} btn-${c}`],
     [/^card-(.+)$/, ([, c]) => `card bg-${c}-200 text-${c}-600 [&>h3]:text-${c}-700`],
     [/^circle-(.+)$/, ([, s]) => `rounded-full w-${s} h-${s}`],
     [/^square-(.+)$/, ([, s]) => `w-${s} h-${s}`],
-    {
-      'btn-xs': 'px-1 py-0.5 text-sm',
-      'btn-sm': 'px-2 py-1 text-base',
-      'btn-lg': 'px-6 py-3 text-2xl',
-    }
   ],
   safelist: [
     ...cartesian(colors, lightnesses).map(([c, l]) => `bg-${c}-${l}`),
@@ -47,7 +52,11 @@ export default defineConfig({
     ...textSizes.map(s => `text-${s}`),
   ],
   presets: [
-    presetWind3(),
+    presetWind4({
+      preflights: {
+        reset: true
+      }
+    }),
     presetAttributify(),
     // https://iconify.design/docs/usage/css/unocss/  https://unocss.dev/presets/icons
     presetIcons({

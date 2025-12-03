@@ -46,7 +46,7 @@ const correct = ref(false)
       </div>
       <!-- a trial is a button choice followed by feedback -->
       <!-- note: you will usually create a separate component for your trials -->
-      <ESequence name="trial" text-center mt30>
+      <ESequence name="trial" text-center mt30 >
 
         <EPage name="choice" v-slot="{ done }">
           <div>Click the {{ trials[step].color }} button.</div>
