@@ -8,11 +8,9 @@
     "dev": "nuxt dev --port 3030",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "preinstall": "git submodule update --init --recursive",
     "postinstall": "nuxt prepare",
-    "stimuli": "bun scripts/generate-key-states.ts",
-    "deploy": "bun run generate && firebase deploy",
-    "fetch-data": "bun scripts/fetchData.ts",
-    "prolific": "bun scripts/prolific.ts"
+    "deploy": "bun run generate && firebase deploy"
   },
   "dependencies": {
     "@nuxt/eslint": "1.4.1",
