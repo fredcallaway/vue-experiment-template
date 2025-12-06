@@ -1,4 +1,19 @@
+## Installation
+
+Open a terminal and navigate to a directory where you want the project to live. Change MY_EXPERIMENT to something that makes sense for you.
+
+```
+git clone github.com/fredcallaway/vue-experiment-template MY_EXPERIMENT
+cd MY_EXPERIMENT
+git remote rename origin upstream
+```
+
+Then create a github repo for your own project. If you have the [github CLI](https://cli.github.com/) installed, you can use `gh repo create`. Otherwise, create it on github.com and run `git remote set origin YOUR_GITHUB_URL`.
+
+
 ## Setup
+
+*Note: All the commands assume that you are in the directory that contains this README.md file.*
 
 Install [bun](https://bun.com/) if you don't have it. You can also use vanilla node with npm or pnpm if you prefer. Bun is much faster at installing packages.
 
@@ -13,38 +28,75 @@ bun install
 bun dev
 ```
 
-The experiment will then be available at http://localhost:3030. If you're already hosting a site on port 3030, it will automatically use a different port; check the command output.
-
+The experiment will then be available at http://localhost:3030. If you're already hosting a site on port 3030, it will automatically use a different port; check the command output. You can configure the port in package.json.
 
 ### Firebase
 
 *Note: you don't actually need to do this until you're ready to deploy your experiment.*
 
-We use firebase for hosting and database. Start by installing the firebase CLI and logging in. You will need to make a firebase account at this point if you haven't already.
+#### Create your first project
+
+We use firebase for hosting and database.
+
+Go to https://firebase.google.com/ and make an account. **DO NOT USE YOUR .EDU EMAIL** because your school may impose restrictions on your google cloud usage. Then create a project for your experiment.
+
+1. Ensure you're logged in to a standard google (@gmail.com) account. Firebase will automatically use your currently active google account. If you're signed in on a .edu account, it may or may not work depending on your school.
+2. Go to console.firebase.google.com
+3. Click  "get started by setting up a firebase project"
+4. Enter a new name not used before and check I agree to the TOS
+
+*Note: for subsequent experiments, you should be able to skip this step and create new projects via the CLI.*
+
+After creating your project, install the firebase CLI and log in.
 
 ```
 bun install -g firebase-tools
 firebase login
 ```
 
-Next, initialize hosting. It will ask for a project identifier; this will determine your domain name so **don't use an identifier that participants shouldn't see.** Other than that, you can just accept the default values.
+#### Set up web hosting
+
+Next, initialize web hosting for your new project. 
 
 ```
 firebase init hosting
 ```
 
-Next, initialize the database. Enter **NO** when the `firebase init hosting` command asks about **GitHub deploys**.
+Choose **Use an existing project** and select the project you just created on the web console. Then make the following selections:
+
+
+✔ What do you want to use as your public directory? **.output/public**
+✔ Configure as a single-page app (rewrite all urls to /index.html)? **Yes**
+✔ Set up automatic builds and deploys with GitHub? **No**
+
+
+> Pro-tip: for your future projects, you can skip the web console and create a new project from the command line by choosing "Create a new project" at the first prompt.
+
+
+#### Set up database
 
 ```
 firebase init database
 ```
 
-Next, run the following commands to reset/update configuration files.
+Accept all the defaults (hit enter on every prompt). We will reset database.rules.json later so it doesn't matter if you accept or deny the overwrite.
+
+#### Create web app
 
 ```
-git checkout firebase.json database.rules.json
 firebase apps:create web
-firebase apps:sdkconfig WEB > firebase.config.json
+```
+
+You can call the app whatever you want. It doesn't seem to affect anything.
+
+
+#### Update configuration files
+
+```
+rm -f firebase.config.json
+firebase apps:sdkconfig WEB -o firebase.config.json
+git checkout firebase.json database.rules.json
+rm -f public/index.html
 ```
 
 Deploy the database and website.
@@ -53,8 +105,8 @@ Deploy the database and website.
 bun run deploy
 ```
 
-Copy the "Hosting URL" and set the url parameter in epoch.config.ts
-(this should be automated in future versions).
+Copy the "Hosting URL" and paste it in as the url parameter in epoch.config.ts
+(this may be automated in future template versions).
 
 Finally, commit your configuration files. **Note:** you may get a warning from GitHub about an exposed secret (the firebase apiKey). This is a false alarm; the api key is intended to be public.
 
@@ -67,29 +119,8 @@ git commit -m 'firebase configuration'
 ### Development environment
 
 I strongly recommend using VSCode or Cursor with the following extensions:
+
 - UnoCSS
 - Vue.js
 - ESLint
-
-## Gotchas
-
-- you lose reactivity when destructuring a reactive object (e.g. `useConfig()`)
-
-
-## Misc
-
-https://icon-sets.iconify.design/
-https://icones.js.org/
-
-## To document
-
-- unocss
-  - p-3
-  - mt-1
-  - btn-gray-sm
-- 500 error
-  - e.g. at http://localhost:3000/_nuxt/composables/useEpoch.ts?t=1752573119649:36:12
-  - the line number at the end is what you want
-- devtools
-  - I installed https://devtools.vuejs.org/ but not sure it was necessary
-  - the Render Tree tab is the most useful
+- Nuxtr
