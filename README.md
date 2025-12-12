@@ -81,18 +81,11 @@ firebase init database
 
 Accept all the defaults (hit enter on every prompt). We will reset database.rules.json later so it doesn't matter if you accept or deny the overwrite.
 
-#### Create web app
+
+#### Create web app and update configuration files
 
 ```
-firebase apps:create web
-```
-
-You can call the app whatever you want. It doesn't seem to affect anything.
-
-
-#### Update configuration files
-
-```
+firebase apps:create web web
 rm -f firebase.config.json
 firebase apps:sdkconfig WEB -o firebase.config.json
 git checkout firebase.json database.rules.json
