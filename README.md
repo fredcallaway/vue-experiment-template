@@ -5,6 +5,7 @@ Open a terminal and navigate to a directory where you want the project to live. 
 ```
 git clone github.com/fredcallaway/vue-experiment-template MY_EXPERIMENT
 cd MY_EXPERIMENT
+git submodule update --init --recursive
 git remote rename origin upstream
 ```
 
