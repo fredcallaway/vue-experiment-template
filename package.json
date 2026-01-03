@@ -8,7 +8,6 @@
     "dev": "nuxt dev --port 3030",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "preinstall": "git submodule update --init --recursive",
     "postinstall": "nuxt prepare",
     "deploy": "bun run generate && firebase deploy"
   },
