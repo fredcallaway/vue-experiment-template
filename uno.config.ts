@@ -40,8 +40,8 @@ export default defineConfig({
     },
     [/^btn-(.+)-(.+)$/, ([, c, s]) => `btn-${s} btn-${c}`],
     [/^card-(.+)$/, ([, c]) => `card bg-${c}-200 text-${c}-600 [&>h3]:text-${c}-700`],
-    [/^circle-(.+)$/, ([, s]) => `rounded-full w-${s} h-${s}`],
-    [/^square-(.+)$/, ([, s]) => `w-${s} h-${s}`],
+    [/^circle-(\d+)$/, ([, s]) => `rounded-full w-${s} h-${s}`],
+    [/^square-(\d+)$/, ([, s]) => `w-${s} h-${s}`],
   ],
   safelist: [
     ...cartesian(colors, lightnesses).map(([c, l]) => `bg-${c}-${l}`),
