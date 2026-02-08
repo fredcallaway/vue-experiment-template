@@ -73,7 +73,7 @@ const correct = ref(false)
       </ESequence>
     </ERepeat>
   
-    <ESurvey />
+    <EDebriefSurvey />
   
     <ECompletion />
   </ESequence>
