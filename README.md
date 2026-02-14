@@ -118,3 +118,10 @@ I strongly recommend using VSCode or Cursor with the following extensions:
 - Vue.js
 - ESLint
 - Nuxtr
+
+
+# FAQ
+
+## I'm getting EMFILE and/or EBADF errors from `bun run dev`
+
+This can happen if you have many extraneous files, for example a python virtual environment. Move those into a separate directory.
