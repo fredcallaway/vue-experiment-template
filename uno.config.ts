@@ -78,6 +78,11 @@ export default defineConfig({
     [/^b(\d+)$/, ([, d]) => ({ position: 'absolute', bottom: `${+d * 10}px` })],
     [/^r(\d+)$/, ([, d]) => ({ position: 'absolute', right: `${+d * 10}px` })],
     [/^l(\d+)$/, ([, d]) => ({ position: 'absolute', left: `${+d * 10}px` })],
+    ['subtle-scrollbar', {
+      'scrollbar-gutter': 'stable',
+      'scrollbar-width': 'thin',
+      'scrollbar-color': 'rgba(0, 0, 0, 0.2) transparent',
+    }],
   ],
   theme: {
     // https://github.com/unocss/unocss/blob/main/packages-presets/preset-mini/src/_theme/colors.ts
