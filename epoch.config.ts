@@ -1,5 +1,4 @@
 export default defineEpochConfig({
-  url: "https://vue-experiment-template.web.app/",
   title: 'Psychology Experiment',
   icon: '/favicon.svg',
   version: "0.1",
