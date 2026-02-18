@@ -2,14 +2,14 @@
 
 const epoch = usePhaseEpoch('demoPhases', ['apple', 'banana', 'choice', 'durian', 'date'])
 const { Phase, goToPhase } = useDisplayPhases(epoch.phases, { duration: 500 })
-watch(epoch.phase, (newPhase, oldPhase) => {
-  goToPhase(newPhase)
+watch(epoch.phase, async (newPhase, oldPhase) => {
+  await goToPhase(newPhase)
 })
 
 </script>
 
 <template>
-  <div w800px h300px>
+  <div>
     <!-- constant means always mounted; just invisible when inactive -->
     <!-- see also: persist which keeps it mounted between first and last active phase -->
     <!-- static means it stays in the layout flow when not active (by default, it takes no space when inactive) -->
@@ -19,7 +19,6 @@ watch(epoch.phase, (newPhase, oldPhase) => {
 
     <Phase which="apple" flex-center flex-col gap-5>
       <div font-bold>apple</div>
-      <OnMounted :fn="() => console.log('apple mounted')"/>
       <ESequence name="applesequence" text-lg>
         <EContinue button>Red Delicious</EContinue>
         <EContinue button>Granny Smith</EContinue>
@@ -29,7 +28,6 @@ watch(epoch.phase, (newPhase, oldPhase) => {
 
     <Phase which="banana" flex-center flex-col gap-5>
       <div font-bold>banana</div>
-      <OnMounted :fn="() => console.log('banana mounted')"/>
       <PButton value="next" @click="epoch.next" />
     </Phase>
 
