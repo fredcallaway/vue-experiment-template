@@ -23,23 +23,35 @@ const correct = ref(false)
 <!--v-if-->
 
 <template>
-<div mt-10px w800px relative>
+<div relative wfull hfull p3 >
 
   <ESequence name="experiment" ref="experiment">
     <EConsent> <ConsentContent /> </EConsent>
-  
-    <EInstructions mt-15 v-slot="{ goNext }">
 
-      <EPage>
-        <header>
+    <EInstructions v-slot="{ goNext }">
+
+      <EPage name="click">
+        <div class="prompt">
           In this experiment, you will click buttons. For example, the one below.
-        </header>
-        <PButton value="Start" @click="goNext" />
+          Click it.
+        </div>
+        <div flex-center>
+          <PButton value="Start" @click="goNext" />
+        </div>
+      </EPage>
+      
+      <EPage>
+        <div class="prompt">
+          That's pretty much it! Have fun!
+        </div>
+        <div flex-center>
+          <PButton value="Start" @click="goNext" />
+        </div>
       </EPage>
 
     </EInstructions>
   
-    <ERepeat name="main" :count="trials.length" v-slot="{ step }">
+    <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
       <!-- show bonus at the top left -->
       <div text-xl font-bold>
         Bonus: ${{ bonus.dollars.toFixed(2) }}
@@ -72,6 +84,10 @@ const correct = ref(false)
         
       </ESequence>
     </ERepeat>
+
+    <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
+    <EDemoPhases />
+
   
     <EDebriefSurvey />
   
