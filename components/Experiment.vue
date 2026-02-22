@@ -53,8 +53,13 @@ const correct = ref(false)
   
     <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
       <!-- show bonus at the top left -->
-      <div text-xl font-bold>
-        Bonus: ${{ bonus.dollars.toFixed(2) }}
+      <div text-xl font-bold flex justify-between>
+        <div>
+          Bonus: ${{ bonus.dollars.toFixed(2) }}
+        </div>
+        <div>
+          Trial: <span w-6 text-right inline-block >{{ step + 1 }}</span> / {{ trials.length }}
+        </div>
       </div>
       <!-- a trial is a button choice followed by feedback -->
       <!-- note: you will usually create a separate component for your trials -->
