@@ -14,7 +14,7 @@ const bonus = useBonus()
 bonus.centsPerPoint = 5
 
 const colors = ['orange', 'blue'] as const  // `as const` allows typescript to confirm these colors are supported by PButton
-const trials = random.shuffle(repeat(colors, 2)).map(color => ({color}))
+const trials = random.shuffle(repeat(colors, 10)).map(color => ({color}))
 const correct = ref(false)
 
 </script>
