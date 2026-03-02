@@ -17,6 +17,7 @@ const colors = ['orange', 'blue'] as const  // `as const` allows typescript to c
 const trials = random.shuffle(repeat(colors, 10)).map(color => ({color}))
 const correct = ref(false)
 
+
 </script>
 
 <!-- if you include the line below anywhere in your template, the world may explode -->
@@ -52,7 +53,6 @@ const correct = ref(false)
     </EInstructions>
   
     <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
-      <!-- show bonus at the top left -->
       <div text-xl font-bold flex justify-between>
         <div>
           Bonus: ${{ bonus.dollars.toFixed(2) }}
@@ -90,10 +90,12 @@ const correct = ref(false)
       </ESequence>
     </ERepeat>
 
-    <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
+    <EDemoOutline />
     <EDemoPhases />
+    <EDemoError />
+    
+    <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
 
-  
     <EDebriefSurvey />
   
     <ECompletion />

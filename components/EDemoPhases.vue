@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const epoch = usePhaseEpoch('demoPhases', ['apple', 'banana', 'choice', 'durian', 'date'])
+const epoch = usePhaseEpoch('DemoPhases', ['apple', 'banana', 'choice', 'durian', 'date'])
 const { Phase, goToPhase } = useDisplayPhases(epoch.phases, { duration: 500 })
 watch(epoch.phase, async (newPhase, oldPhase) => {
   await goToPhase(newPhase)
