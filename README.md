@@ -119,9 +119,32 @@ I strongly recommend using VSCode or Cursor with the following extensions:
 - ESLint
 - Nuxtr
 
+TODO: create an AGENT.md for the template.
 
 # FAQ
 
-## I'm getting EMFILE and/or EBADF errors from `bun run dev`
+## I'm getting an error that I don't understand
 
-This can happen if you have many extraneous files, for example a python virtual environment. Move those into a separate directory.
+If you're getting a confusing error that doesn't seem to be related to your own code,
+it's most likely a problem with the **nuxt cache**. Run this:
+```
+pkill bun; rm -rf .nuxt; bun run dev
+```
+
+If that doesn't work, try reinstalling all packages next:
+```
+pkill bun; rm -rf node_modules; rm -rf .nuxt; bun i; bun run dev
+```
+
+If it's still not working, use git to checkout a previous commit that was working. 
+- If the old version *does not work*, skip to the next section.
+- If the old version *does work*, then it's probably a bug in your code or the template. If you think it's the latter OR you haven't fixed it in 10 minutes, [post an issue on github](https://github.com/fredcallaway/vue-experiment-template/issues).
+
+
+### MFILE and/or EBADF errors
+
+This can happen if you have many extraneous files, for example a python virtual environment. Move those into a separate directory. If it persists (even after clearing .nuxt and node_modules), you might need to restart your computer.
+
+### Error: [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin
+
+Try removing the nuxt cache.
