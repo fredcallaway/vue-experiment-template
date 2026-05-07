@@ -5,10 +5,10 @@ const currentEpoch = useCurrentEpoch()
 </script>
 
 <template>
-  <div w-full>
+  <div w150 mx-auto>
     <div text-xl text-center mb-10 >{{ currentEpoch.id }}</div>
     <ERepeat name="DemoOutline" :count="4" v-slot="{ step }">
-      <div w150 mb-5>
+      <div mb-5>
         This page shows how the outline handles the case where the epoch structure
         is not constant within an ERepeat.
       </div>
