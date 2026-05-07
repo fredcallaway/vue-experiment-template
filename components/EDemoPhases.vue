@@ -43,7 +43,10 @@ watch(epoch.phase, async (newPhase, oldPhase) => {
 
     <Phase which="date" flex-center flex-col gap-5>
       you chose date
-      <PButton value="reset" @click="epoch.goTo(0)" />
+      <div flex-center gap-2 >
+        <PButton value="reset" color="red" @click="epoch.goTo(0)" />
+        <PButton value="move on" @click="epoch.done()" />
+      </div>
     </Phase>
   </div>
 </template>
