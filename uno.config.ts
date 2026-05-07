@@ -88,6 +88,7 @@ export default defineConfig({
     // https://github.com/unocss/unocss/blob/main/packages-presets/preset-mini/src/_theme/colors.ts
     colors: {
       primary: 'hsl(186, 85%, 48%)',
+      'primary-700': 'hsl(186, 85%, 20%)',
       'primary-600': 'hsl(186, 85%, 30%)',
       'primary-500': 'hsl(186, 85%, 40%)',
       'primary-400': 'hsl(186, 85%, 48%)',
