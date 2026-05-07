@@ -53,7 +53,7 @@ const correct = ref(false)
     </EInstructions>
   
     <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
-      <div text-xl font-bold flex justify-between>
+      <div text-xl font-bold flex justify-between >
         <div>
           Bonus: ${{ bonus.dollars.toFixed(2) }}
         </div>
