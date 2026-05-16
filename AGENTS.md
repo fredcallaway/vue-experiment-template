@@ -51,6 +51,8 @@ In addition to any already established guidelines, follow these rules:
 
 The goal of this branch is to reduce complexity and standardize development patterns for developers that are using the template to build experiments. The prolific and data pages are out of scope, as is the basic database structure.
 
+Update CHANGES.md along with each commit. This file will be used as a migration guide for projects using the template.
+
 Use these existing projects as examples of how the template is used in practice. Note that these are using the bleeding branch of core, not the simplified one developed here.
 
 /Users/fred/projects/eyeplan/graphnav2
