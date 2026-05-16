@@ -99,10 +99,11 @@ const correct = ref(false)
     
     <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
 
+    <EHierarchicalSurveyExample />
+
     <EDebriefSurvey />
   
     <ECompletion />
   </ESequence>
 </div>
 </template>
-

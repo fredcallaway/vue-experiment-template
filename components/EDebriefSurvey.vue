@@ -1,17 +1,24 @@
 <script lang="ts" setup>
-const { done } = useEpoch("Survey")
+import type { SurveyPage } from '~/core/components/epochs/ESurveySequence.vue'
 
-// create a new field for each question you add
-const formData = reactive({
-  difficulty: "",
-  fun: "",
-  feedback: "",
-})
-
-const submit = () => {
-  logEvent("survey.submit", formData)
-  done()
-}
+const pages: SurveyPage[] = [
+  {
+    id: 'difficulty',
+    prompt: 'How difficult was the experiment?',
+    options: ['too easy', 'just right', 'too hard'],
+  },
+  {
+    id: 'fun',
+    prompt: 'How fun was the experiment?',
+    options: ['worse than average', 'typical', 'better than average'],
+  },
+  {
+    id: 'feedback',
+    kind: 'text',
+    prompt: 'Do you have any other feedback?',
+    placeholder: 'Optional',
+  },
+]
 </script>
 
 <template>
@@ -22,56 +29,6 @@ const submit = () => {
       Thanks for participating! We have a few quick questions before you go.
     </p>
 
-    <form class="flex flex-col gap-4">
-      <RadioButtons
-        question="How difficult was the experiment?"
-        :options="['too easy', 'just right', 'too hard']"
-        v-model="formData.difficulty"
-      />
-
-      <RadioButtons
-        question="How fun was the experiment?"
-        :options="['worse than average', 'typical', 'better than average']"
-        v-model="formData.fun"
-      />
-
-      <fieldset>
-        <h4>Do you have any other feedback? (optional)</h4>
-        <textarea
-          input
-          id="feedback"
-          v-model="formData.feedback"
-          rows="3"
-          w-580px
-        ></textarea>
-      </fieldset>
-
-      <PButton value="Submit" btn-primary @click="submit" />
-    </form>
+    <ESurveySequence name="Survey" :pages="pages" />
   </div>
 </template>
-
-<style scoped>
-fieldset {
-  border: inherit;
-  margin: inherit;
-  padding: inherit;
-}
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  @apply px-2 py-1;
-}
-</style>
-
-<script lang="ts">
-declareDataView("survey", (sessionData: SessionData) => {
-  return R.pipe(
-    sessionData.events,
-    R.filter((e) => e.eventType == "survey.submit"),
-    // R.map(R.prop("data"))
-    R.map(R.prop("data")),
-    R.map(R.pick(["difficulty", "fun", "feedback"]))
-  )
-})
-</script>
