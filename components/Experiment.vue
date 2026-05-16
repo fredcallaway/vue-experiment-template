@@ -88,14 +88,14 @@ const correct = ref(false)
           </div>
         </EPage>
         
-        <EDelay name="feedback" :ms="1000" text-3xl>
+        <EPage name="feedback" :duration="1000" text-3xl>
           <div text-green v-if="correct">
             correct!
           </div>
           <div text-red v-else>
             incorrect.
           </div>
-        </EDelay>
+        </EPage>
         
       </ESequence>
     </ERepeat>

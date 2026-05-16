@@ -10,6 +10,8 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Moved keyboard response handling into `core/utils/keyPress.ts`.
 - Removed template-managed participant input blocking; projects should block input explicitly in task code, usually with an `animating` or phase-state guard.
 - Kept `usePButton`, but rewrote it to use a local event controller instead of `useParticipant`.
+- Simplified epoch primitives by removing `EButtons`, `EKey`, `EWait`, and `EDelay`.
+- Added `duration` to `EPage` for fixed-duration pages.
 - Added a key-press demonstration to the demo experiment.
 
 ## Playback Removal
@@ -202,6 +204,43 @@ For key responses, gate the handler:
 <PKey keys="SPACE" @press="!animating && next()" />
 ```
 
+## Epoch Components
+
+`EPage` is now the standard primitive for single-step custom epoch UI. It exposes the epoch through the default slot and supports fixed-duration pages:
+
+```vue
+<EPage name="feedback" :duration="1000">
+  Correct!
+</EPage>
+```
+
+This replaces `EDelay`.
+
+The shorthand epoch components `EButtons`, `EKey`, and `EWait` were removed. Use explicit `EPage` markup instead:
+
+```vue
+<EPage name="choice" v-slot="{ done }">
+  <PButtons values="left right" @click="done" />
+</EPage>
+```
+
+```vue
+<EPage name="response" v-slot="{ done }">
+  <PKey once keys="F J" @press="done" />
+</EPage>
+```
+
+For async hook-based waits, prefer explicit lifecycle code on `EPage`:
+
+```vue
+<EPage @mounted="async (epoch) => {
+  await hooks.afterFeedback.receive()
+  epoch.done()
+}" />
+```
+
+`EContinue` remains supported because it standardizes a common continuation UI, including button, keyboard, and delay behavior.
+
 ## Data And Event Views
 
 The core `PEvent` type and `isParticipantEvent` helper were removed from `core/internal/data.ts`.
@@ -227,10 +266,12 @@ This is in the instructions flow after the button-click example so projects can 
 3. Replace `P.promiseKeyPress(...)` with `promiseKeyPress(...)`.
 4. Replace `P.onKeyPress(...)` with `onKeyPress(...)`.
 5. Keep `PButton`, `PButtons`, and `PKey` markup if it still fits the task.
-6. Add explicit semantic logging for choices, trials, survey responses, and task events.
-7. Add explicit `animating`, `ready`, or phase guards for inputs that should be blocked during transitions.
-8. Remove playback routes, links, and custom playback-dependent code.
-9. Run `bun run typecheck`.
+6. Replace `EDelay` with `EPage :duration`.
+7. Replace `EButtons`, `EKey`, and `EWait` with explicit `EPage` markup.
+8. Add explicit semantic logging for choices, trials, survey responses, and task events.
+9. Add explicit `animating`, `ready`, or phase guards for inputs that should be blocked during transitions.
+10. Remove playback routes, links, and custom playback-dependent code.
+11. Run `bun run typecheck`.
 
 ## Commits Included
 
@@ -238,6 +279,7 @@ Core submodule:
 
 - `2cab2ae playback: remove playback page`
 - `d414d4c participant: remove useParticipant abstraction`
+- `b1b3154 epochs: simplify page primitives`
 
 Template:
 
