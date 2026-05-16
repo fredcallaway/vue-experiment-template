@@ -43,6 +43,13 @@ const correct = ref(false)
           <PButton value="Start" @click="goNext" />
         </div>
       </EPage>
+
+      <EPage name="key">
+        <div class="prompt">
+          Keyboard responses work too. Press the <kbd>K</kbd> key to continue.
+        </div>
+        <PKey keys="K" @press="goNext" />
+      </EPage>
       
       <EPage>
         <div class="prompt">
