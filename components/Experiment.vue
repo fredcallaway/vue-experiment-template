@@ -43,19 +43,19 @@ const correct = ref(false)
         </div>
       </EContinue>
 
-      <EPage name="click">
+      <EPage name="click" v-slot="{ done }">
         <div class="prompt">
           Sometimes, there might be multiple buttons. I hate decisions!
         </div>
-        <PButtons values="left right" classes="btn-blue btn-red" @click="goNext" />
+        <PButtons values="left right" classes="btn-blue btn-red" @click="done" />
       </EPage>
 
 
-      <EPage name="key">
+      <EPage name="key" v-slot="{ done }">
         <div class="prompt">
           You might also press keys. Press the <kbd>K</kbd> key to continue.
         </div>
-        <PKey keys="K" @press="goNext" />
+        <PKey keys="K" @press="done" />
       </EPage>
       
       <EContinue button="start" >

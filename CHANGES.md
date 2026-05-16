@@ -254,7 +254,9 @@ PostHog no longer needs to blacklist `participant.hover` and `participant.moused
 The demo experiment now includes a key-press example:
 
 ```vue
-<PKey keys="K" @press="goNext" />
+<EPage name="key" v-slot="{ done }">
+  <PKey keys="K" @press="done" />
+</EPage>
 ```
 
 This is in the instructions flow after the button-click example so projects can see both supported response styles.
