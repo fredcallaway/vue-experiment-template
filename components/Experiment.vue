@@ -36,31 +36,33 @@ const correct = ref(false)
 
     <EInstructions v-slot="{ goNext }">
 
-      <EPage name="click">
+      <EContinue button="Start">
         <div class="prompt">
           In this experiment, you will click buttons. For example, the one below.
           Click it.
         </div>
-        <div flex-center>
-          <PButton value="Start" @click="goNext" />
+      </EContinue>
+
+      <EPage name="click">
+        <div class="prompt">
+          Sometimes, there might be multiple buttons. I hate decisions!
         </div>
+        <PButtons values="left right" classes="btn-blue btn-red" @click="goNext" />
       </EPage>
+
 
       <EPage name="key">
         <div class="prompt">
-          Keyboard responses work too. Press the <kbd>K</kbd> key to continue.
+          You might also press keys. Press the <kbd>K</kbd> key to continue.
         </div>
         <PKey keys="K" @press="goNext" />
       </EPage>
       
-      <EPage>
+      <EContinue button="start" >
         <div class="prompt">
           That's pretty much it! Have fun!
         </div>
-        <div flex-center>
-          <PButton value="Start" @click="goNext" />
-        </div>
-      </EPage>
+      </EContinue>
 
     </EInstructions>
   
