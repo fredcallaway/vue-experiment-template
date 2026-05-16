@@ -27,8 +27,10 @@ const correct = ref(false)
 <div relative wfull hfull p3 >
 
   <ESequence name="experiment" ref="experiment">
-    <EContinue mt10>
-      Hello. It is me, the template experiment.<br>I live in <kbd>components/Experiment.vue</kbd>
+    <EContinue button mt10 >
+      Hello. It is me, the template experiment. <br>
+      I live in <kbd>components/Experiment.vue</kbd> <br>
+      <b>I AM BEING SIMPLIFIED!</b> (this is the simplified branch)
     </EContinue>
     <EConsent> <ConsentContent /> </EConsent>
 
