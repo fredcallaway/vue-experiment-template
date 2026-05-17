@@ -27,14 +27,22 @@ const correct = ref(false)
 <div relative wfull hfull p3 >
 
   <ESequence name="experiment" ref="experiment">
+    
     <EContinue button mt10 >
       Hello. It is me, the template experiment. <br>
       I live in <kbd>components/Experiment.vue</kbd> <br>
       <b>I AM BEING SIMPLIFIED!</b> (this is the simplified branch)
     </EContinue>
+
     <EConsent> <ConsentContent /> </EConsent>
 
-    <EInstructions v-slot="{ goNext }">
+    <ENavigableSequence v-slot="{ enableNext }" header=Instructions >
+      <EPage @mounted="enableNext" name="welcome">
+        <div class="prompt !max-w-130" >
+          Thanks for participating in our experiment! We'll start with some instructions.
+          Navigate with arrow keys or the buttons at the top.
+        </div>
+      </EPage>
 
       <EContinue button="Start">
         <div class="prompt">
@@ -47,7 +55,7 @@ const correct = ref(false)
         <div class="prompt">
           Sometimes, there might be multiple buttons. I hate decisions!
         </div>
-        <PButtons values="left right" classes="btn-blue btn-red" @click="done" />
+        <PButtons values="left right" classes="btn-blue btn-red" @click="done" class="gap-20 mt-20" />
       </EPage>
 
 
@@ -58,13 +66,13 @@ const correct = ref(false)
         <PKey keys="K" @press="done" />
       </EPage>
       
-      <EContinue button="start" >
+      <EContinue button="Start" >
         <div class="prompt">
           That's pretty much it! Have fun!
         </div>
       </EContinue>
 
-    </EInstructions>
+    </ENavigableSequence>
   
     <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
       <div text-xl font-bold flex justify-between >

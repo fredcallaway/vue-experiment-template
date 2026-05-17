@@ -12,6 +12,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Kept `usePButton`, but rewrote it to use a local event controller instead of `useParticipant`.
 - Simplified epoch primitives by removing `EButtons`, `EKey`, `EWait`, and `EDelay`.
 - Added `duration` to `EPage` for fixed-duration pages.
+- Replaced `EInstructions` with `ENavigableSequence`, a sequence wrapper that lets users move between pages.
 - Added a key-press demonstration to the demo experiment.
 
 ## Playback Removal
@@ -240,6 +241,19 @@ For async hook-based waits, prefer explicit lifecycle code on `EPage`:
 ```
 
 `EContinue` remains supported because it standardizes a common continuation UI, including button, keyboard, and delay behavior.
+
+`EInstructions` was renamed to `ENavigableSequence` and no longer injects a default welcome page. Put any welcome or instruction copy directly in project code:
+
+```vue
+<ENavigableSequence v-slot="{ enableNext }">
+  <EPage name="welcome" @mounted="enableNext">
+    Thanks for participating in our experiment!
+  </EPage>
+  <EContinue button="Start">
+    Task-specific instructions...
+  </EContinue>
+</ENavigableSequence>
+```
 
 ## Data And Event Views
 
