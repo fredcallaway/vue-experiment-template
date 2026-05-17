@@ -17,7 +17,7 @@ Use Bun from the repository root.
 - Typecheck: `bun run typecheck`
 - Build: `bun run build`
 
-Run `bun run typecheck` after all edits. Use Playwright/browser verification for substantial UI changes or when a UI fix needs confirmation.
+Run `bun run typecheck` after all edits.
 
 ## Code Style
 
