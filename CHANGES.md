@@ -12,6 +12,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Kept `usePButton`, but rewrote it to use a local event controller instead of `useParticipant`.
 - Simplified epoch primitives by removing `EButtons`, `EKey`, `EWait`, and `EDelay`.
 - Added `duration` to `EPage` for fixed-duration pages.
+- Added slot-local `state` to `EPage` for simple reactive page state.
 - Replaced `EInstructions` with `ENavigableSequence`, a sequence wrapper that lets users move between pages.
 - Added a key-press demonstration to the demo experiment.
 

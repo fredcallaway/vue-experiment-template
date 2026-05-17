@@ -51,13 +51,20 @@ const correct = ref(false)
         </div>
       </EContinue>
 
-      <EPage name="click" v-slot="{ done }">
-        <div class="prompt">
+      <EPage name="click" v-slot="{ state }" >
+        <div class="prompt" v-if="state.choice">
+          You chose {{ state.choice }}.
+        </div>
+        <div class="prompt" v-else>
           Sometimes, there might be multiple buttons. I hate decisions!
         </div>
-        <PButtons values="left right" classes="btn-blue btn-red" @click="done" class="gap-20 mt-20" />
+        <PButtons :disabled="R.isDefined(state.choice)" values="left right" classes="btn-blue btn-red" class="gap-20 mt-20" 
+          @click="(val) => {
+            state.choice = val
+            enableNext()
+          }"
+        />
       </EPage>
-
 
       <EPage name="key" v-slot="{ done }">
         <div class="prompt">
