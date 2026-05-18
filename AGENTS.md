@@ -42,10 +42,7 @@ Run `bun run typecheck` after all edits.
 
 In addition to any already established guidelines, follow these rules:
 
-- If a change is only made to the core submodule, only create a commit in core.
-- Any top-level commit that includes core must start with "core: ".
-- If changes are made to both the top-level repo and core, create the commit in core first and then commit the submodule along with the associated top-level changes (with the "core: " prefix)
-- Where possible, separate "core: " commits from top-level commits. When the top-level commit depends on the core commit, create a separate "core: " commit that only commits the core submodule. "core: " commits should only include top-level changes necessary for compatibility with the change to core.
+- Commits that target a specific component should be prefixed by the component name, e.g. "EPage: add slot state"
 
 # Guidlines for branch: simplified
 
