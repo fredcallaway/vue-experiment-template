@@ -16,8 +16,6 @@ These are *proposed* changes that target the broader goal of the simplified bran
 
 ## Template
 
-**Move the duplicated timing view into the template defaults.** The same timing parser is copied across the template and multiple projects. It extracts top-level experiment sections from epoch start events and writes a wide timing row. That is generic template behavior, not project-specific analysis, so the template should provide it by default or expose it as a reusable helper that projects can opt into from `preprocessing.ts`.
-
 **Make data view registration explicit.** Data pages import `preprocessing.ts`, but many data views are declared in Vue component modules as side effects. That means a view may only exist if the relevant component module has been imported somewhere else, which is easy to miss when reviewing or migrating a project. A project-level manifest, or a convention such as `components/Foo.data.ts`, would make data outputs discoverable and avoid relying on component import side effects.
 
 **Remove starter workarounds for logger registration.** The starter experiment and some example projects include a short artificial wait so event/data loggers have time to register before the experiment begins. If data views and loggers are registered explicitly before the experiment page runs, this workaround should no longer be needed. Removing it would make starter code look less magical and avoid teaching users to add timing sleeps for initialization.

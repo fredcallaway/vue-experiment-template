@@ -1,5 +1,19 @@
+/* 
+Use this file to define data views that aren't specific to one component.
+We provide an example "timing" view that computes the amount of time spent
+on each top-level epoch. You may wish to modify this if the structure of
+your experiment warrants a different division.
+*/
 
-const prepareTimingData = (sessionData: SessionData) => {
+const toWideFormat = <T extends Record<string, any>>(items: T[], key: keyof T, value: keyof T) => {
+  return R.pipe(
+    items,
+    R.pullObject(x=>x[key], x=>x[value]),
+    x => ([x])
+  )
+}
+
+declareDataView('timing', (sessionData: SessionData) => {
   const { startTime, completionTime } = sessionData.meta
 
   const getSection = (e: EpochEvent) => (e.data.id.match(/experiment\[\d+\]-([^[-]+)/))?.[1] ?? null
@@ -42,17 +56,5 @@ const prepareTimingData = (sessionData: SessionData) => {
     // ignore last section (Completion)
   })
   
-  return sections
-}
-
-const toWideFormat = <T extends Record<string, any>>(items: T[], key: keyof T, value: keyof T) => {
-  return R.pipe(
-    items,
-    R.pullObject(x=>x[key], x=>x[value]),
-    x => ([x])
-  )
-}
-
-declareDataView('timing', (sessionData: SessionData) => {
-  return toWideFormat(prepareTimingData(sessionData), 'section', 'duration')
+  return toWideFormat(sections, 'section', 'duration')
 })
