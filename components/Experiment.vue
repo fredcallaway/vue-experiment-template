@@ -7,9 +7,6 @@ defineWindowSize({
   height: 650,
 })
 
-// wait for loggers to load
-await new Promise(resolve => setTimeout(resolve, 10))
-
 const bonus = useBonus()
 bonus.centsPerPoint = 5
 

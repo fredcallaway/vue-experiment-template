@@ -16,9 +16,8 @@ These are *proposed* changes that target the broader goal of the simplified bran
 
 ## Template
 
-**Make data view registration explicit.** Data pages import `preprocessing.ts`, but many data views are declared in Vue component modules as side effects. That means a view may only exist if the relevant component module has been imported somewhere else, which is easy to miss when reviewing or migrating a project. A project-level manifest, or a convention such as `components/Foo.data.ts`, would make data outputs discoverable and avoid relying on component import side effects.
-
-**Remove starter workarounds for logger registration.** The starter experiment and some example projects include a short artificial wait so event/data loggers have time to register before the experiment begins. If data views and loggers are registered explicitly before the experiment page runs, this workaround should no longer be needed. Removing it would make starter code look less magical and avoid teaching users to add timing sleeps for initialization.
+<!-- **Make data view registration explicit.** Data pages import `preprocessing.ts`, but many data views are declared in Vue component modules as side effects. That means a view may only exist if the relevant component module has been imported somewhere else, which is easy to miss when reviewing or migrating a project. A project-level manifest, or a convention such as `components/Foo.data.ts`, would make data outputs discoverable and avoid relying on component import side effects. -->
+<!-- NOT PLANNED. This is currently in the SFC because data views use component-internal logging types. It also fits the broader single-file mentality. The concern about depending on component usage elsewhere is a possible concern. -->
 
 **Keep the starter experiment focused on current primitives.** The starter should model the standard patterns that new projects should copy: `EPage` for custom steps, `EContinue` for common continuation screens, `ENavigableSequence` for instructions, participant UI components only as UI, semantic event logs, and explicit input blocking in task state. It should avoid showing deprecated or compatibility-oriented patterns unless the example is specifically about migration.
 
