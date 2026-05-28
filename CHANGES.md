@@ -17,6 +17,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Added optional `navPages` config for custom top-level developer navigation links.
 - Added a condition inspector that can view and pin registered `useConditions` choices from the developer UI.
 - Removed the old `EpochView`; epoch navigation now lives in `EpochControls` and `EpochOutline`.
+- Fixed `useLocalAsync` so settled promises are no longer reported as pending on component unmount.
 - Added a key-press demonstration to the demo experiment.
 
 ## Playback Removal
