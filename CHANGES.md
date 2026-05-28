@@ -122,7 +122,7 @@ For callback-style handling:
 const unsubscribe = onKeyPress('SPACE', ({ key, rt }) => {
   // ...
 })
-onUnmounted(unsubscribe)
+// onUnmounted(unsubscribe)  NOT necessary; automatically unsubscribed on unmount
 ```
 
 `PKey` now uses `onKeyPress` internally, so this still works:
