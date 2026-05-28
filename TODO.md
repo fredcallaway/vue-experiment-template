@@ -12,8 +12,6 @@ These are *proposed* changes that target the broader goal of the simplified bran
 
 **Simplify epoch outline/indexing internals.** The current developer outline discovers much of the epoch tree by traversing the running experiment, creating pseudo-leaves for indexable epochs, materializing repeated children, caching the result, and then jumping back. This supports useful developer tooling, but it is complex and sensitive to lifecycle behavior. A cleaner long-term direction is for `ESequence`, `ERepeat`, and related primitives to expose declarative metadata so the outline can be built without executing the full task flow.
 
-**Fix the `EClickTest` done-event schema.** The click test data view reads both `score` and `clicks`, but the declared `clicktest.done` event type and logger only include `score`. As written, the `clicks` output column always falls back to zero. The event schema, logger, and data view should agree, either by logging `clicks` or by removing that output column.
-
 **Consider a clearer wait/lifecycle primitive for `EPage`.** `EPage` has become the standard single-step custom epoch primitive, but many examples still encode async waiting through `@mounted` handlers that manually call `epoch.done()`. This is explicit, but it makes common waits noisy and pushes lifecycle details into templates. A small, current-style helper for hook waits or promise waits could preserve the simplicity of `EPage` while replacing the old `EWait` use cases with something easier to read.
 
 ## Template
