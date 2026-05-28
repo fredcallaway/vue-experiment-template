@@ -14,6 +14,9 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Added `duration` to `EPage` for fixed-duration pages.
 - Added slot-local `state` to `EPage` for simple reactive page state.
 - Replaced `EInstructions` with `ENavigableSequence`, a sequence wrapper that lets users move between pages.
+- Added optional `navPages` config for custom top-level developer navigation links.
+- Added a condition inspector that can view and pin registered `useConditions` choices from the developer UI.
+- Removed the old `EpochView`; epoch navigation now lives in `EpochControls` and `EpochOutline`.
 - Added a key-press demonstration to the demo experiment.
 
 ## Playback Removal
@@ -264,6 +267,48 @@ The debug event view no longer gives participant events special formatting or pa
 
 PostHog no longer needs to blacklist `participant.hover` and `participant.mousedown`, because those events are no longer emitted.
 
+## Developer Navigation
+
+`epoch.config.ts` can now define extra top-level navigation links with `navPages`:
+
+```ts
+export default defineEpochConfig({
+  // ...
+  navPages: {
+    Docs: '/docs',
+    Stimuli: '/stimuli',
+  },
+})
+```
+
+These links are appended to the built-in developer nav links for Experiment, Prolific, Data, and Test. Existing configs do not need to change.
+
+## Conditions
+
+The developer UI now includes a condition inspector for choices registered through `useConditions().choice(...)` or `useConditions().permute(...)`.
+
+Each condition can be pinned in the UI. Pinned conditions are written to URL parameters named `condition.<key>`, and the assignment counter only advances across unpinned conditions. This makes it possible to test a fixed condition while still cycling other condition dimensions.
+
+The `useConditions()` return shape changed after the initial inspector implementation:
+
+```ts
+const { conditions, options, isPinned, choice, permute } = useConditions()
+```
+
+The temporary `selectedIndices` and `setConditionIndex` fields are no longer exposed. Project code should normally continue to use only `choice(...)`, `permute(...)`, and the returned `conditions`.
+
+## Epoch Developer Tools
+
+`core/internal/components/EpochView.vue` was removed. The old bookmark UI and direct phase/step dropdown controls are gone.
+
+Use the outline and controls panel instead:
+
+- Pin or jump to leaf epochs from `EpochOutline`.
+- Use the previous/next buttons and fast-mode toggle in `EpochControls`.
+- Use the `jump` URL parameter for pinned epoch state.
+
+Core now provides `useUrlParam(...)` in `core/utils/url-params.ts` for reactive URL parameter state. This is used by condition pinning and epoch pinning, and is available for project developer tooling when needed.
+
 ## Demo Experiment
 
 The demo experiment now includes a key-press example:
@@ -288,7 +333,9 @@ This is in the instructions flow after the button-click example so projects can 
 8. Add explicit semantic logging for choices, trials, survey responses, and task events.
 9. Add explicit `animating`, `ready`, or phase guards for inputs that should be blocked during transitions.
 10. Remove playback routes, links, and custom playback-dependent code.
-11. Run `bun run typecheck`.
+11. Move any custom `EpochView` imports or assumptions to `EpochOutline`, `EpochControls`, or project-specific tooling.
+12. If project developer pages should appear in the top nav, add them through `navPages` in `epoch.config.ts`.
+13. Run `bun run typecheck`.
 
 ## Commits Included
 
@@ -297,8 +344,16 @@ Core submodule:
 - `2cab2ae playback: remove playback page`
 - `d414d4c participant: remove useParticipant abstraction`
 - `b1b3154 epochs: simplify page primitives`
+- `1d6748a NEW: ENavigableSequence (prev EInstructions)`
+- `f0804af EPage: add slot state`
+- `e8e0e2e add navPages to epoch.config`
+- `a9ff185 add ConditionView`
+- `5f3dffa rm EpochView`
+- `02e39ac refac: useUrlParam for ConditionView and EpochOutline`
 
 Template:
 
 - `631c5e1 participant: update core submodule`
 - `cee75f7 demo: add key press example`
+- `f5ce5b6 core: ENavigableSequence`
+- `2cec00c core: EPage slot`
