@@ -25,7 +25,7 @@ These are *proposed* changes that target the broader goal of the simplified bran
 
 ## Projects
 
-**Standardize surveys on the current core survey component.** The associated projects have several survey styles: direct `survey.submit` forms, an older survey sequence component, a newer core `ESurveySequence`, and custom wide survey parsers. Projects should converge on the core survey event shape where possible. A helper such as `surveyWideView(name, columns, extras)` would keep project-specific columns while removing repeated parsing code.
+**Standardize surveys on the current core survey components.** The associated projects have several survey styles: direct `survey.submit` forms, older survey sequence components, the component-based core survey API, and custom wide survey parsers. Projects should converge on the core survey event shape where possible. A helper such as `surveyWideView(name, columns, extras)` would keep project-specific columns while removing repeated parsing code.
 
 **Migrate project code off removed APIs.** Several associated projects still use or import removed or compatibility-era APIs such as `useParticipant`, `EButtons`, `EKey`, `EWait`, `EDelay`, and `EInstructions`. These should be updated to `promiseKeyPress` or `onKeyPress`, `EPage`, `PKey`, `PButtons`, `duration`, and `ENavigableSequence`. Doing this in real projects will also validate that the simplified branch has enough ergonomic replacement patterns.
 
