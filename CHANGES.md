@@ -20,6 +20,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Fixed `useLocalAsync` so settled promises are no longer reported as pending on component unmount.
 - Added a key-press demonstration to the demo experiment.
 - Replaced `ESurveySequence` with component-based survey epochs: `ESurveyWrapper`, `ESurveyButtons`, `ESurveyMultiButtons`, and `ESurveyText`.
+- Changed `ESurveyMultiButtons` to use one epoch with internal question state so the shared prompt and buttons remain mounted between questions.
 
 ## Playback Removal
 
