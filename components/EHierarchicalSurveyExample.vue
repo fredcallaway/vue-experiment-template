@@ -1,10 +1,5 @@
 <template>
   <ESurveyWrapper name="GroupedSurveyExample">
-    <ESurveyButtons
-      name="difficulty"
-      prompt="How difficult was the experiment?"
-      options="too easy, just right, too hard"
-    />
     <ESurveyMultiButtons
       name="interface"
       intro="
