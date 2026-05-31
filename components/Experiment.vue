@@ -116,9 +116,6 @@ const correct = ref(false)
       </ESequence>
     </ERepeat>
 
-    <EDemoOutline />
-    <EDemoError />
-    
     <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
 
     <EHierarchicalSurveyExample />
