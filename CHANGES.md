@@ -26,6 +26,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Added a browsable `/demo` section in `core/pages/demo/` that hosts standalone documentation pages (starting with `demo/phases.vue`), and a `Demo` link in the top NavBar. These replace the ad-hoc `EDemo*` components rendered inside the demo experiment.
 - Removed the `core/pages/test/` pages and the `Test` NavBar link; the `/demo` section replaces them.
 - Updated the deploy/git-status clean-worktree check to ignore `core/pages/demo` instead of `core/pages/test`.
+- Scoped the epoch outline cache per page (keyed by the page's root epoch id) so the outline rebuilds when navigating between pages with different timelines, e.g. `/dev` and `/demo/*`. The `localStorage` key changed from `epoch-outline` to `epoch-outline:<rootId>`; the old key is now unused and can be cleared.
 
 ## Playback Removal
 
