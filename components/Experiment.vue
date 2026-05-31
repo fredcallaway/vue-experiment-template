@@ -117,7 +117,6 @@ const correct = ref(false)
     </ERepeat>
 
     <EDemoOutline />
-    <EDemoPhases />
     <EDemoError />
     
     <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
