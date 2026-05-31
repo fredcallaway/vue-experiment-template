@@ -25,3 +25,7 @@
     </ESurveyWrapper>
   </div>
 </template>
+
+<script lang="ts">
+declareDataView('survey', sessionData => toWideFormat(getSurveyResponses(sessionData, 'Survey'), 'id', 'response'))
+</script>

@@ -22,6 +22,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Replaced `ESurveySequence` with component-based survey epochs: `ESurveyWrapper`, `ESurveyButtons`, `ESurveyMultiButtons`, and `ESurveyText`.
 - Changed `ESurveyMultiButtons` to use one epoch with internal question state so the shared prompt and buttons remain mounted between questions.
 - Removed the core survey data view and shared survey response types; projects should declare survey data views for the exports they need.
+- Added core preprocessing helpers for reusable survey response extraction and wide-format data views.
 
 ## Playback Removal
 
