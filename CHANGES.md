@@ -24,6 +24,7 @@ This branch simplifies the template by removing playback-specific infrastructure
 - Removed the core survey data view and shared survey response types; projects should declare survey data views for the exports they need.
 - Added core preprocessing helpers for reusable survey response extraction and wide-format data views.
 - Added a browsable `/demo` section in `core/pages/demo/` that hosts standalone documentation pages (starting with `demo/phases.vue`), and a `Demo` link in the top NavBar. These replace the ad-hoc `EDemo*` components rendered inside the demo experiment.
+- Removed the `core/pages/test/` pages and the `Test` NavBar link; the `/demo` section replaces them.
 
 ## Playback Removal
 
