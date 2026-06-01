@@ -28,3 +28,4 @@ logs
 .firebase/*.cache
 .project_id
 .prolific_token
+.playwright-mcp
