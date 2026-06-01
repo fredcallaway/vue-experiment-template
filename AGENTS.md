@@ -7,6 +7,7 @@ This is a Nuxt 3 experiment app that extends the template layer in `core/`.
 - Project-specific experiment code lives at the repository root, especially `components/` and `epoch.config.ts`.
 - `core/` is owned by the template. Do not edit files under `core/` unless the user explicitly asks for a template-layer change.
 - Never touch the `data/` directory.
+- Architecture decision records for the template layer live in `core/docs/adr/` (numbered `NNNN-title.md`). Record non-trivial template-layer design decisions there, and consult them for background.
 
 ## Development Commands
 
@@ -43,6 +44,7 @@ Run `bun run typecheck` after all edits.
 In addition to any already established guidelines, follow these rules:
 
 - Commits that target a specific component should be prefixed by the component name, e.g. "EPage: add slot state"
+- Do NOT make top-level commits that only bump the submodule pointer.
 
 # Guidlines for branch: simplified
 
