@@ -25,11 +25,12 @@ const correct = ref(false)
 
   <ESequence name="experiment" ref="experiment">
     
-    <EContinue button mt10 >
+    <EPage mt10 text-center>
       Hello. It is me, the template experiment. <br>
-      I live in <kbd>components/Experiment.vue</kbd> <br>
+      I live in <code>components/Experiment.vue</code><br>
       <b>I AM BEING SIMPLIFIED!</b> (this is the simplified branch)
-    </EContinue>
+      <PContinue button />
+    </EPage>
 
     <EConsent> <ConsentContent /> </EConsent>
 
@@ -41,12 +42,13 @@ const correct = ref(false)
         </div>
       </EPage>
 
-      <EContinue button="Start">
+      <EPage flex-center flex-col>
         <div class="prompt">
           In this experiment, you will click buttons. For example, the one below.
           Click it.
         </div>
-      </EContinue>
+        <PContinue button="Start" />
+      </EPage>
 
       <EPage name="click" v-slot="{ state }" >
         <div class="prompt" v-if="state.choice">
@@ -70,11 +72,12 @@ const correct = ref(false)
         <PKey keys="K" @press="done" />
       </EPage>
       
-      <EContinue button="Start" >
+      <EPage flex-center flex-col>
         <div class="prompt">
           That's pretty much it! Have fun!
         </div>
-      </EContinue>
+        <PContinue button="Start" />
+      </EPage>
 
     </ENavigableSequence>
   
