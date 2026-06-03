@@ -20,6 +20,8 @@ Use Bun from the repository root.
 
 Run `bun run typecheck` after all edits.
 
+The user usually has a dev server already running. Before starting one, check whether the dev server is already serving (its port is set by the `dev` script in `package.json`) and reuse it. If nothing is running, ask the user to start it rather than launching your own. Never kill a dev server you did not start, and never use a broad `pkill -f "nuxt dev"` / `pkill -f "bun run dev"` — it cannot tell the user's server from yours.
+
 ## Code Style
 
 - Keep code simple, concise, and modular.
