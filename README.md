@@ -1,15 +1,29 @@
 ## Installation
 
-Open a terminal and navigate to a directory where you want the project to live. Change MY_EXPERIMENT to something that makes sense for you.
+Open a terminal and navigate to a directory where you want the project to live. Run e.g. `DEST_DIR=my-sweet-experiment` to set the directory to clone into. Then paste the following code.
 
-```
-git clone https://github.com/fredcallaway/vue-experiment-template MY_EXPERIMENT
-cd MY_EXPERIMENT
-git submodule update --init --recursive
-git remote rename origin upstream
+```bash
+# Configuration.
+TEMPLATE_REPO="https://github.com/fredcallaway/vue-experiment-template.git"
+: "${TEMPLATE_BRANCH:=simplified}"
+: "${DEST_DIR:=vue-experiment}"
+
+# Clone the template branch, including submodules
+git clone --branch "$TEMPLATE_BRANCH" --recurse-submodules "$TEMPLATE_REPO" "$DEST_DIR"
+cd "$DEST_DIR"
+
+# Replace the template history with a single fresh root commit
+NEW_ROOT_COMMIT="$(git commit-tree HEAD^{tree} -m "Initial commit from $TEMPLATE_REPO#$TEMPLATE_BRANCH")"
+git reset --soft "$NEW_ROOT_COMMIT"
+git branch -M main
+
+# Remove the template remote and branch tracking
+git branch --unset-upstream 2>/dev/null || true
+git remote remove origin 2>/dev/null || true
+git remote remove upstream 2>/dev/null || true
 ```
 
-Then create a github repo for your own project. If you have the [github CLI](https://cli.github.com/) installed, you can use `gh repo create`. Otherwise, create it on github.com and run `git remote set origin YOUR_GITHUB_URL`.
+You can then create a github repo for your own project. If you have the [github CLI](https://cli.github.com/) installed, you can use `gh repo create`. Otherwise, create it on github.com and run `git remote set origin YOUR_GITHUB_URL`.
 
 
 ## Setup
