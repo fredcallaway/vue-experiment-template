@@ -1,3 +1,10 @@
+# Must dos
+
+Either support creating a fresh prolific project or require project ID. Status indicator says: When projectId is blank, status shows as valid token with "✓ Valid" (because status == 'ok' OR status == 'invalidProjectId' both show as green on line 92). The placeholder text is misleading. You cannot actually leave it blank and successfully publish a study to Prolific. The project ID is required for the API to work, but the UI suggests it's optional.
+
+Add some kind of warning when deploying the same version twice
+
+
 # Simplification TODO
 
 These are *proposed* changes that target the broader goal of the simplified branch: to reduce complexity and standardize development patterns for developers that are using the template to build experiments
