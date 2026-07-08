@@ -78,6 +78,9 @@ const correct = ref(false)
 
     </ENavigableSequence>
   
+    <!-- Don't forget this! It prevents people from restarting your study -->
+    <ENoReturn my30 />
+
     <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
       <div text-xl font-bold flex justify-between >
         <div>
