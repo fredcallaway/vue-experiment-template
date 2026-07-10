@@ -8,6 +8,7 @@ This is a Nuxt 3 experiment app that extends the template layer in `core/`.
 - `core/` is owned by the template. Do not edit files under `core/` unless the user explicitly asks for a template-layer change.
 - Never touch the `data/` directory.
 - Architecture decision records for the template layer live in `core/docs/adr/` (numbered `NNNN-title.md`). Record non-trivial template-layer design decisions there, and consult them for background.
+- **Before implementing experiment features, read `core/internal/examples/README.md`** — the index of live reference implementations (`core/internal/examples/*.vue`, served at `/examples/<slug>`). Copy their patterns; they encode current conventions. Human-facing concept docs are served at `/docs`.
 
 ## Development Commands
 
@@ -28,7 +29,7 @@ The user usually has a dev server already running. Before starting one, check wh
 - Prefer existing project and template conventions over new abstractions.
 - Only add explicit imports when autoimport is insufficient.
 - Use Vue single-file components with `<script lang="ts" setup>` for component logic when practical.
-- Use template-provided composables and helpers such as `useEpoch`, `defineParams`, `declareEventLogger`, `declareDataView`, `useBonus`, and `useParticipant`.
+- Use template-provided composables and helpers such as `useEpoch`, `defineParams`, `declareEventLogger`, `declareDataView`, and `useBonus`.
 - In epoch components, call `useEpoch(...)` before composables that depend on epoch context.
 - Preserve existing UnoCSS utility style in templates. Use scoped CSS only where it keeps the component clearer.
 - Avoid compatibility branches for old non-data code. Update callers to the current convention instead.
