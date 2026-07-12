@@ -1,11 +1,14 @@
 # Must dos
 
-Either support creating a fresh prolific project or require project ID. Status indicator says: When projectId is blank, status shows as valid token with "✓ Valid" (because status == 'ok' OR status == 'invalidProjectId' both show as green on line 92). The placeholder text is misleading. You cannot actually leave it blank and successfully publish a study to Prolific. The project ID is required for the API to work, but the UI suggests it's optional.
+Add some kind of warning when deploying the same version twice.
 
-Add some kind of warning when deploying the same version twice
+DataView linking to active component is unreliable. Fix.
 
+Examples pages should show their source file on the first page (at least).
 
-# Simplification TODO
+Add an `excluded` field to SessionMeta for `assignmentsToReplace`.
+
+# Proposed dos
 
 These are *proposed* changes that target the broader goal of the simplified branch: to reduce complexity and standardize development patterns for developers that are using the template to build experiments
 
@@ -29,6 +32,12 @@ These are *proposed* changes that target the broader goal of the simplified bran
 **Keep the starter experiment focused on current primitives.** The starter should model the standard patterns that new projects should copy: `EPage` for custom steps, `EPage` + `PContinue` for common continuation screens, `ENavigableSequence` for instructions, participant UI components only as UI, semantic event logs, and explicit input blocking in task state. It should avoid showing deprecated or compatibility-oriented patterns unless the example is specifically about migration.
 
 **Add compact migration examples for removed epoch shortcuts.** The migration guide explains that `EButtons`, `EKey`, `EWait`, and `EDelay` were removed, but projects benefit from concrete before/after snippets for each common use. These examples should show direct replacements with `EPage`, `PButtons`, `PKey`, `duration`, and explicit async `@mounted` code where needed. This belongs in template docs because it tells downstream projects exactly how to update.
+
+**Drop unocss?** Or maybe just turn off attributify? Remove custom shortcuts?
+Rationale: custom utilities makes the code harder to read about and less portable. Main concern is a
+user changing a shortcut that breaks the core-provided pages. If we keep shortcuts, we should make
+it clear that the existing ones can't be edited. Perhaps stop using them in the core pages. Agents
+tend to get confused by attributify.
 
 ## Projects
 
