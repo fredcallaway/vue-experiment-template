@@ -1,4 +1,4 @@
-# Must dos
+# Inbox
 
 Add some kind of warning when deploying the same version twice.
 
@@ -7,6 +7,29 @@ DataView linking to active component is unreliable. Fix.
 Examples pages should show their source file on the first page (at least).
 
 Add an `excluded` field to SessionMeta for `assignmentsToReplace`.
+
+Display study status to PROCESSING when we click the execute button. It's confusing
+that it still shows up as "AWAITING REVIEW" 
+
+Show mean and median wage on the prolific study page (full data only)
+
+# Examples consolidation (proposed 2026-07-19)
+
+Follow-up to the new `/examples/study` (StudyExample + PeekGame + PeekGameInstructions),
+which settled the interactive-instructions pattern (exposed-surface; see README decision
+rule). Consolidate the remaining examples:
+
+- **Retire (subsumed by `/study`)**: ExperimentExample + ColorTrial, SequencesExample,
+  BonusExample, InstructionsEmbeddedExample, InstructionsRefExample,
+  InstructionsHooksExample + CoinGame. If hooks stay documented at all, a paragraph in
+  `/docs` suffices.
+- **Keep**: TrialExample + StroopTrial (canonical *phase-based* trial; PeekGame is the
+  async-loop style), PhasesExample, ResponsesExample, TimingExample, SurveysExample,
+  MouseTrackingExample, InstructionsExample (read-only ENavigableSequence case).
+- **Merge**: ParamsExample + ConditionsExample into one configuration example (keep
+  ProbeTrial); conditions exist mainly to feed params.
+- Update manifest + README accordingly; check `/docs` pages for links to retired slugs
+  before deleting.
 
 # Proposed dos
 
