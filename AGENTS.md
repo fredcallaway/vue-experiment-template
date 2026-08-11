@@ -8,7 +8,7 @@ This is a Nuxt 3 experiment app that extends the template layer in `core/`.
 - `core/` is owned by the template. Do not edit files under `core/` unless the user explicitly asks for a template-layer change.
 - Never touch the `data/` directory.
 - Architecture decision records for the template layer live in `core/docs/adr/` (numbered `NNNN-title.md`). Record non-trivial template-layer design decisions there, and consult them for background.
-- **Before implementing experiment features, read `core/internal/examples/README.md`** — the index of live reference implementations (`core/internal/examples/*.vue`, served at `/examples/<slug>`). Copy their patterns; they encode current conventions. Human-facing concept docs are served at `/docs`.
+- **Before implementing experiment features, read `core/docs/guide/README.md`** — the canonical project-development guide. It routes to live reference implementations under `core/internal/examples/`, served at `/examples/<slug>`.
 
 ## Development Commands
 
