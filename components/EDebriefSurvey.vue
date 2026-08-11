@@ -28,4 +28,6 @@
 
 <script lang="ts">
 declareDataView('survey', sessionData => toWideFormat(getSurveyResponses(sessionData, 'Survey'), 'id', 'response'))
+
+export default {}
 </script>
