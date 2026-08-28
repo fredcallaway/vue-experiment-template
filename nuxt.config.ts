@@ -39,7 +39,7 @@ export default defineNuxtConfig({
     publicKey: posthog.publicKey,
     host: posthog.host,
     sourcemaps: {
-      enabled: true,
+      enabled: posthog.personalApiKey.startsWith('phx_'),
       envId: posthog.projectId,
       personalApiKey: posthog.personalApiKey,
     },
