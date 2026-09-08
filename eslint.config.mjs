@@ -13,7 +13,7 @@ export default withNuxt({
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
-    '@typescript-eslint/prefer-const': 'warn',
+    'prefer-const': 'warn',
     '@typescript-eslint/no-unsafe-function-type': 'off',
   }
 })
