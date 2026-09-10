@@ -28,7 +28,7 @@ The user usually has a dev server already running. Before starting one, check wh
 In addition to any already established guidelines, follow these rules:
 
 - Commits that target a specific component should be prefixed by the component name, e.g. "EPage: add slot state"
-- Do NOT make top-level commits that only bump the submodule pointer.
+- A top-level commit may contain only a `core` pointer update when it records adoption of a verified core commit.
 
 # Guidlines for branch: simplified
 
