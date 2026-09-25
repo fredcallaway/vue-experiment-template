@@ -16,7 +16,7 @@
         "@nuxt/eslint": "1.4.1",
         "@posthog/nuxt": "^1.7.79",
         "@unocss/nuxt": "^66.3.2",
-        "@vueuse/nuxt": "13.4.0",
+        "@vueuse/core": "13.4.0",
         "eslint": "^9.0.0",
         "firebase": "^11.9.1",
         "json-stringify-pretty-compact": "^4.0.0",
@@ -769,8 +769,6 @@
     "@vueuse/core": ["@vueuse/core@13.4.0", "", { "dependencies": { "@types/web-bluetooth": "^0.0.21", "@vueuse/metadata": "13.4.0", "@vueuse/shared": "13.4.0" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-OnK7zW3bTq/QclEk17+vDFN3tuAm8ONb9zQUIHrYQkkFesu3WeGUx/3YzpEp+ly53IfDAT9rsYXgGW6piNZC5w=="],
 
     "@vueuse/metadata": ["@vueuse/metadata@13.4.0", "", {}, "sha512-CPDQ/IgOeWbqItg1c/pS+Ulum63MNbpJ4eecjFJqgD/JUCJ822zLfpw6M9HzSvL6wbzMieOtIAW/H8deQASKHg=="],
-
-    "@vueuse/nuxt": ["@vueuse/nuxt@13.4.0", "", { "dependencies": { "@nuxt/kit": "^3.17.5", "@vueuse/core": "13.4.0", "@vueuse/metadata": "13.4.0", "local-pkg": "^1.1.1" }, "peerDependencies": { "nuxt": "^3.0.0 || ^4.0.0-0", "vue": "^3.5.0" } }, "sha512-0NY8CXQVTZhPipgfUyK9TuEP+tIiy1PteDVPcjdCkDqyGzhrUef4/6j7FeVn/YGgOFqFWfgdrmayESMwHv/onQ=="],
 
     "@vueuse/shared": ["@vueuse/shared@13.4.0", "", { "peerDependencies": { "vue": "^3.5.0" } }, "sha512-+AxuKbw8R1gYy5T21V5yhadeNM7rJqb4cPaRI9DdGnnNl3uqXh+unvQ3uCaA2DjYLbNr1+l7ht/B4qEsRegX6A=="],
 

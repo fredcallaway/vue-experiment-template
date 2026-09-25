@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+import { logEvent } from '../core/composables/logEvent'
+import { useBonus } from '../core/composables/useBonus'
+import { defineWindowSize } from '../core/composables/windowEnforcer'
+import { repeat } from '../core/utils/array'
+import { random } from '../core/utils/random'
+import { R } from '../core/utils/remeda-extensions'
+
 
 logEvent('experiment.begin')
 

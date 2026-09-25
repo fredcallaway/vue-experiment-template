@@ -23,6 +23,9 @@
 </template>
 
 <script lang="ts">
+import { declareDataView } from '../core/composables/dataViews'
+import { getSurveyResponses, toWideFormat } from '../core/utils/dataProcessing'
+
 declareDataView('survey', sessionData => toWideFormat(getSurveyResponses(sessionData, 'Survey'), 'id', 'response'))
 
 export default {}

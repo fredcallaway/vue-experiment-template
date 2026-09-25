@@ -1,3 +1,5 @@
+import { defineEpochConfig } from './core/composables/useConfig'
+
 export default defineEpochConfig({
   title: 'Psychology Experiment',
   icon: '/favicon.svg',
