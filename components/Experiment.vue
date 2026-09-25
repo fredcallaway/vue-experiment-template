@@ -21,11 +21,11 @@ const correct = ref(false)
 <!--v-if-->
 
 <template>
-<div relative wfull hfull p3 >
+<div class="relative wfull hfull p3">
 
   <ESequence name="experiment" ref="experiment">
     
-    <EContinue button mt10 text-center>
+    <EContinue class="mt10 text-center" button>
       Hello. It is me, the template experiment. <br>
       I live in <code>components/Experiment.vue</code><br>
       <b>I AM BEING SIMPLIFIED!</b> (this is the simplified branch)
@@ -33,29 +33,33 @@ const correct = ref(false)
 
     <EConsent> <ConsentContent /> </EConsent>
 
-    <ENavigableSequence v-slot="{ enableNext }" header=Instructions >
+    <ENavigableSequence v-slot="{ enableNext }" header=Instructions>
       <EPage @mounted="enableNext" name="welcome">
-        <div class="prompt !max-w-130" >
+        <div class="prompt !max-w-130">
           Thanks for participating in our experiment! We'll start with some instructions.
           Navigate with arrow keys or the buttons at the top.
         </div>
       </EPage>
 
-      <EContinue button="Start" flex-center flex-col>
+      <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
         <div class="prompt">
           In this experiment, you will click buttons. For example, the one below.
           Click it.
         </div>
       </EContinue>
 
-      <EPage name="click" v-slot="{ state }" >
+      <EPage name="click" v-slot="{ state }">
         <div class="prompt" v-if="state.choice">
           You chose {{ state.choice }}.
         </div>
         <div class="prompt" v-else>
           Sometimes, there might be multiple buttons. I hate decisions!
         </div>
-        <PButtons :disabled="R.isDefined(state.choice)" values="left right" classes="btn-blue btn-red" class="gap-20 mt-20" 
+        <PButtons
+          :disabled="R.isDefined(state.choice)"
+          values="left right"
+          classes="btn-blue btn-red"
+          class="gap-20 mt-20"
           @click="(val) => {
             state.choice = val
             enableNext()
@@ -70,7 +74,7 @@ const correct = ref(false)
         <PKey keys="K" @press="done" />
       </EPage>
       
-      <EContinue button="Start" flex-center flex-col>
+      <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
         <div class="prompt">
           That's pretty much it! Have fun!
         </div>
@@ -79,39 +83,45 @@ const correct = ref(false)
     </ENavigableSequence>
   
     <!-- Don't forget this! It prevents people from restarting your study -->
-    <ENoReturn my30 />
+    <ENoReturn class="my30" />
 
-    <ERepeat name="main" :count="trials.length" v-slot="{ step }" >
-      <div text-xl font-bold flex justify-between >
+    <ERepeat name="main" :count="trials.length" v-slot="{ step }">
+      <div class="text-xl font-bold flex justify-between">
         <div>
           Bonus: ${{ bonus.dollars.toFixed(2) }}
         </div>
         <div>
-          Trial: <span w-6 text-right inline-block >{{ step + 1 }}</span> / {{ trials.length }}
+          Trial: <span class="w-6 text-right inline-block">{{ step + 1 }}</span> / {{ trials.length }}
         </div>
       </div>
       <!-- a trial is a button choice followed by feedback -->
       <!-- note: you will usually create a separate component for your trials -->
-      <ESequence name="trial" text-center mt30 >
+      <ESequence class="text-center mt30" name="trial">
 
         <EPage name="choice" v-slot="{ done }">
           <div>Click the {{ trials[step].color }} button.</div>
-          <div mt3 flex-center gap4>
-            <PButton v-for="color in colors" :key="color" :value="color" :color="color" @click="() => {
+          <div class="mt3 flex flex-wrap justify-center items-center gap4">
+            <PButton
+              v-for="color in colors"
+              :key="color"
+              :value="color"
+              :color="color"
+              @click="() => {
               correct = color == trials[step].color
               if (correct) {
                 bonus.addPoints(1)
               }
               done()
-            }" />
+            }"
+            />
           </div>
         </EPage>
         
-        <EPage name="feedback" :duration="1000" text-3xl>
-          <div text-green v-if="correct">
+        <EPage class="text-3xl" name="feedback" :duration="1000">
+          <div class="text-green" v-if="correct">
             correct!
           </div>
-          <div text-red v-else>
+          <div class="text-red" v-else>
             incorrect.
           </div>
         </EPage>

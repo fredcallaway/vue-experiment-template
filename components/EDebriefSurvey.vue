@@ -1,5 +1,5 @@
 <template>
-  <div w-600px mx-auto>
+  <div class="w-600px mx-auto">
     <h1>You're done!</h1>
 
     <p>
@@ -17,11 +17,7 @@
         prompt="How fun was the experiment?"
         options="worse than average, typical, better than average"
       />
-      <ESurveyText
-        name="feedback"
-        prompt="Do you have any other feedback?"
-        placeholder="Optional"
-      />
+      <ESurveyText name="feedback" prompt="Do you have any other feedback?" placeholder="Optional" />
     </ESurveyWrapper>
   </div>
 </template>
