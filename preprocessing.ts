@@ -2,7 +2,7 @@ import { declareDataView } from './core/composables/dataViews'
 import { type EpochEvent, type SessionData, isEpochEvent } from './core/internal/data'
 import { toWideFormat } from './core/utils/dataProcessing'
 import { formatTime } from './core/utils/formatting'
-import { R } from './core/utils/remeda-extensions'
+import * as R from 'remeda'
 
 /* 
 Use this file to define data views that aren't specific to one component.
