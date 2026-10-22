@@ -6,7 +6,9 @@
     "core"
   ],
   "scripts": {
-    "test": "bun test core",
+    "test": "bun test core && node --test core/testing/browser.integration.mjs core/testing/agent/session.integration.mjs",
+    "test:experiments": "node core/testing/cli.mjs",
+    "test:testing": "node core/testing/verify.mjs",
     "typecheck": "bun nuxt typecheck",
     "build": "nuxt build",
     "dev": "nuxt dev --port 3030",

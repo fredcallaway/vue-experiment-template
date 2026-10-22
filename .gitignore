@@ -30,3 +30,4 @@ logs
 .project_id
 .prolific_token
 .playwright-mcp
+.experiment-tests
