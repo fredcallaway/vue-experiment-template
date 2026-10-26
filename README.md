@@ -7,15 +7,14 @@ following code.
 ```bash
 # Configuration.
 TEMPLATE_REPO="https://github.com/fredcallaway/vue-experiment-template.git"
-: "${TEMPLATE_BRANCH:=simplified}"
 : "${DEST_DIR:=vue-experiment}"
 
-# Clone the template branch, including submodules
-git clone --branch "$TEMPLATE_BRANCH" --recurse-submodules "$TEMPLATE_REPO" "$DEST_DIR"
+# Clone the template, including submodules
+git clone --recurse-submodules "$TEMPLATE_REPO" "$DEST_DIR"
 cd "$DEST_DIR"
 
 # Replace the template history with a single fresh root commit
-NEW_ROOT_COMMIT="$(git commit-tree HEAD^{tree} -m "Initial commit from $TEMPLATE_REPO#$TEMPLATE_BRANCH")"
+NEW_ROOT_COMMIT="$(git commit-tree HEAD^{tree} -m "Initial commit from $TEMPLATE_REPO")"
 git reset --soft "$NEW_ROOT_COMMIT"
 git branch -M main
 

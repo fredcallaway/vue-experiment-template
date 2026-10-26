@@ -32,8 +32,7 @@ const trials = random.shuffle(repeat(buttonColors, 10)).map(color => ({ color })
     
     <EContinue class="mt10 text-center" button>
       Hello. It is me, the template experiment. <br>
-      I live in <code>components/Experiment.vue</code><br>
-      <b>I AM BEING SIMPLIFIED!</b> (this is the simplified branch)
+      I live in <code>components/Experiment.vue</code>
     </EContinue>
 
     <EConsent> <ConsentContent /> </EConsent>
