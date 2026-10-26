@@ -38,7 +38,7 @@ const trials = random.shuffle(repeat(buttonColors, 10)).map(color => ({ color })
         <span class="i-mdi-help-circle-outline text-pink-600 align-middle" role="img" aria-label="help icon" />
         in the top right of the page.
       </p>
-      <Teleport to="body"><span class="absolute right-5 top-7 z-60 i-mdi-arrow-top-right text-5xl text-pink-600 pointer-events-none" aria-hidden="true" /></Teleport>
+      <Teleport to="body"><span class="absolute right-9 top-2 z-60 text-2xl leading-6 text-pink-600 pointer-events-none" aria-hidden="true">→</span></Teleport>
     </EContinue>
 
     <EConsent> <ConsentContent /> </EConsent>
