@@ -33,6 +33,12 @@ const trials = random.shuffle(repeat(buttonColors, 10)).map(color => ({ color })
     <EContinue class="mt10 text-center" button>
       Hello. It is me, the template experiment. <br>
       I live in <code>components/Experiment.vue</code>
+      <p class="mt-4 text-sm">
+        First time here? Try activating tutorial mode by clicking the
+        <span class="i-mdi-help-circle-outline text-pink-600 align-middle" role="img" aria-label="help icon" />
+        in the top right of the page.
+      </p>
+      <Teleport to="body"><span class="absolute right-5 top-7 z-60 i-mdi-arrow-top-right text-5xl text-pink-600 pointer-events-none" aria-hidden="true" /></Teleport>
     </EContinue>
 
     <EConsent> <ConsentContent /> </EConsent>
