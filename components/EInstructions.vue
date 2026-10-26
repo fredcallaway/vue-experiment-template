@@ -15,64 +15,70 @@ declareDataView('instructions', session => session.events.filter(isResponse).map
 </script>
 
 <script lang="ts" setup>
-// Keep responses here so Back navigation preserves them when an EPage remounts.
-const responses = reactive<Partial<Record<InstructionPage, string>>>({})
 let pageStartedAt = 0
 
 function startPage() {
   pageStartedAt = performance.now()
 }
 
-function recordResponse(page: InstructionPage, response: string, enableNext: () => void) {
-  if (responses[page] !== undefined) return
-  responses[page] = response
+function recordResponse(page: InstructionPage, response: string) {
   logResponse({ page, response, rt: Math.round(performance.now() - pageStartedAt) })
-  enableNext()
 }
 </script>
 
 <template>
   <ENavigableSequence name="instructions" header="Instructions" v-slot="{ enableNext }">
     <EPage name="welcome" @mounted="enableNext">
-      <p class="prompt">
-        Thanks for participating! We'll start with some instructions.
-        Navigate with the arrow keys or the buttons above. You can go Back to re-read earlier pages.
-      </p>
+      <div class="prompt !max-w-130">
+        Thanks for participating in our experiment! We'll start with some instructions.
+        Navigate with arrow keys or the buttons at the top.
+      </div>
     </EPage>
 
-    <EPage name="choice" @mounted="startPage">
-      <p class="prompt" v-if="responses.choice !== undefined">
-        You chose {{ responses.choice }}. Select Next to continue.
-      </p>
-      <p class="prompt" v-else>
-        In this experiment, you will click buttons. Choose either button below to unlock Next.
-      </p>
+    <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
+      <div class="prompt">
+        In this experiment, you will click buttons. For example, the one below.
+        Click it.
+      </div>
+    </EContinue>
+
+    <EPage name="click" @mounted="startPage" v-slot="{ state }">
+      <div class="prompt" v-if="state.choice">
+        You chose {{ state.choice }}.
+      </div>
+      <div class="prompt" v-else>
+        Sometimes, there might be multiple buttons. I hate decisions!
+      </div>
       <PButtons
         values="left right"
         classes="btn-blue btn-red"
         class="gap-20 mt-20"
-        :disabled="responses.choice !== undefined"
-        @click="value => recordResponse('choice', value, enableNext)"
+        :disabled="state.choice !== undefined"
+        @click="value => {
+          state.choice = value
+          recordResponse('choice', value)
+          enableNext()
+        }"
       />
     </EPage>
 
-    <EPage name="key" @mounted="startPage">
-      <p class="prompt" v-if="responses.key !== undefined">
-        You pressed {{ responses.key }}. Select Next to continue.
-      </p>
-      <p class="prompt" v-else>
-        You might also press keys. Press the <kbd>K</kbd> key to unlock Next.
-      </p>
+    <EPage name="key" @mounted="startPage" v-slot="{ done }">
+      <div class="prompt">
+        You might also press keys. Press the <kbd>K</kbd> key to continue.
+      </div>
       <PKey
-        v-if="responses.key === undefined"
         keys="K"
-        once
-        @press="({ key }) => recordResponse('key', key, enableNext)"
+        @press="({ key }) => {
+          recordResponse('key', key)
+          done()
+        }"
       />
     </EPage>
 
-    <EContinue name="ready" button="Start">
-      <p class="prompt">That's pretty much it! Select Start to begin the experiment. Have fun!</p>
+    <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
+      <div class="prompt">
+        That's pretty much it! Have fun!
+      </div>
     </EContinue>
   </ENavigableSequence>
 </template>
