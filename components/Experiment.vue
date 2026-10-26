@@ -4,6 +4,7 @@ import { useBonus } from '../core/composables/useBonus'
 import { defineWindowSize } from '../core/composables/windowEnforcer'
 import { repeat } from '../core/utils/array'
 import { random } from '../core/utils/random'
+import EButtonTrial, { buttonColors } from './EButtonTrial.vue'
 
 
 logEvent('experiment.begin')
@@ -16,9 +17,7 @@ defineWindowSize({
 const bonus = useBonus()
 bonus.centsPerPoint = 5
 
-const colors = ['orange', 'blue'] as const  // `as const` allows typescript to confirm these colors are supported by PButton
-const trials = random.shuffle(repeat(colors, 10)).map(color => ({color}))
-const correct = ref(false)
+const trials = random.shuffle(repeat(buttonColors, 10)).map(color => ({ color }))
 
 
 </script>
@@ -53,39 +52,7 @@ const correct = ref(false)
           Trial: <span class="w-6 text-right inline-block">{{ step + 1 }}</span> / {{ trials.length }}
         </div>
       </div>
-      <!-- a trial is a button choice followed by feedback -->
-      <!-- note: you will usually create a separate component for your trials -->
-      <ESequence class="text-center mt30" name="trial">
-
-        <EPage name="choice" v-slot="{ done }">
-          <div>Click the {{ trials[step].color }} button.</div>
-          <div class="mt3 flex flex-wrap justify-center items-center gap4">
-            <PButton
-              v-for="color in colors"
-              :key="color"
-              :value="color"
-              :color="color"
-              @click="() => {
-              correct = color == trials[step].color
-              if (correct) {
-                bonus.addPoints(1)
-              }
-              done()
-            }"
-            />
-          </div>
-        </EPage>
-        
-        <EPage class="text-3xl" name="feedback" :duration="1000">
-          <div class="text-green" v-if="correct">
-            correct!
-          </div>
-          <div class="text-red" v-else>
-            incorrect.
-          </div>
-        </EPage>
-        
-      </ESequence>
+      <EButtonTrial :trial-number="step + 1" :target="trials[step].color" />
     </ERepeat>
 
     <EClickTest :params="{ boardWidth: 600, boardHeight: 500 }" />
