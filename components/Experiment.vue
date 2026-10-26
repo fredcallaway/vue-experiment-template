@@ -4,7 +4,6 @@ import { useBonus } from '../core/composables/useBonus'
 import { defineWindowSize } from '../core/composables/windowEnforcer'
 import { repeat } from '../core/utils/array'
 import { random } from '../core/utils/random'
-import * as R from 'remeda'
 
 
 logEvent('experiment.begin')
@@ -40,54 +39,7 @@ const correct = ref(false)
 
     <EConsent> <ConsentContent /> </EConsent>
 
-    <ENavigableSequence v-slot="{ enableNext }" header=Instructions>
-      <EPage @mounted="enableNext" name="welcome">
-        <div class="prompt !max-w-130">
-          Thanks for participating in our experiment! We'll start with some instructions.
-          Navigate with arrow keys or the buttons at the top.
-        </div>
-      </EPage>
-
-      <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
-        <div class="prompt">
-          In this experiment, you will click buttons. For example, the one below.
-          Click it.
-        </div>
-      </EContinue>
-
-      <EPage name="click" v-slot="{ state }">
-        <div class="prompt" v-if="state.choice">
-          You chose {{ state.choice }}.
-        </div>
-        <div class="prompt" v-else>
-          Sometimes, there might be multiple buttons. I hate decisions!
-        </div>
-        <PButtons
-          :disabled="R.isDefined(state.choice)"
-          values="left right"
-          classes="btn-blue btn-red"
-          class="gap-20 mt-20"
-          @click="(val) => {
-            state.choice = val
-            enableNext()
-          }"
-        />
-      </EPage>
-
-      <EPage name="key" v-slot="{ done }">
-        <div class="prompt">
-          You might also press keys. Press the <kbd>K</kbd> key to continue.
-        </div>
-        <PKey keys="K" @press="done" />
-      </EPage>
-      
-      <EContinue class="flex flex-wrap justify-center items-center flex-col" button="Start">
-        <div class="prompt">
-          That's pretty much it! Have fun!
-        </div>
-      </EContinue>
-
-    </ENavigableSequence>
+    <EInstructions />
   
     <!-- Don't forget this! It prevents people from restarting your study -->
     <ENoReturn class="my30" />
