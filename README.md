@@ -1,3 +1,17 @@
+# Vue Experiment Template
+
+An opinionated, end-to-end system for building and running online experiments through [Prolific](https://www.prolific.com/). Built with Vue and Nuxt, this template covers the full lifecycle of an experiment, from study design to participant payments. It provides:
+
+- **A website and database** through [Firebase](https://firebase.google.com/), free within its usage limits.
+- **Prolific study management** to create studies, monitor recruitment, and pay participants, with automatic bonus calculation and partial-completion detection.
+- **An interactive experiment outline** that lets you jump to different sections in one click.
+- **Real-time event recording**, with live previews of tidy analysis tables that sync to your computer as CSVs.
+- **Balanced condition assignment**, with tools to replace incomplete assignments.
+- **Tools for you and your coding agent:** reusable experiment components, working examples, agent-facing documentation, type checking, and automated browser tests.
+- **Optional session recordings** through [PostHog](https://posthog.com/session-replay) to see how participants experienced the task.
+
+After setup, open `/docs` in the running app for a guide to developing and running a study, whether you write code or use an agent. Technical explanations and examples follow.
+
 ## Installation
 
 Open a terminal and navigate to a directory where you want the project to live. Run e.g.
