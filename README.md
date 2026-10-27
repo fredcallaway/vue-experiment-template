@@ -122,16 +122,9 @@ git checkout firebase.json database.rules.json
 rm -f public/index.html
 ```
 
-Deploy the database and website.
+Set the researcher contact email and planned experiment version in `epoch.config.ts` (see [deployment safety](core/operations/README.md#configure-contact-and-version)). Commit your configuration before deploying:
 
-```
-bun run deploy
-```
-
-Copy the "Hosting URL" and paste it in as the url parameter in epoch.config.ts (this may
-be automated in future template versions).
-
-Finally, commit your configuration files. **Note:** you may get a warning from GitHub
+**Note:** you may get a warning from GitHub
 about an exposed secret (the firebase apiKey). This is a false alarm; the api key is
 intended to be public.
 
@@ -139,6 +132,15 @@ intended to be public.
 git add .firebaserc firebase.config.json epoch.config.ts 
 git commit -m 'firebase configuration'
 ```
+
+Deploy database rules explicitly, then deploy and verify the website:
+
+```bash
+firebase deploy --only database --project <your-project-id>
+bun run deploy
+```
+
+`bun run deploy` deploys static Hosting only and reports the verified Hosting URL, SHA, and version. It requires a clean checkout and a real contact email. Before recruitment, review any warning about changed code under an already posted version. Keep the version for pre-posting fixes and unchanged-code batches; increment it for changes to the procedure or analysis after posting. See [the operations guide](core/operations/README.md) for agent commands, explicit version-warning overrides, and deployment recovery.
 
 
 ### Development environment
@@ -150,7 +152,7 @@ I strongly recommend using VSCode or Cursor with the following extensions:
 - ESLint
 - Nuxtr
 
-TODO: create an AGENT.md for the template.
+Agent entry point: [AGENTS.md](AGENTS.md), which links to the project guide, operations CLI, and browser-testing tools.
 
 # FAQ
 
