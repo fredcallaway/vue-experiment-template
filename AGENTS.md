@@ -32,6 +32,8 @@ Before deploying or preparing recruitment, read [the operations guide](core/oper
 - `bun run ops -- deploy run` deploys static Hosting, verifies the live build, and records its SHA/version. `bun run deploy` uses the same service and also checks the Firebase CLI's selected project.
 - `bun run ops -- --help` lists study/review draft and read-only investigation commands. Study publication and participant actions/payments remain final researcher actions in the web UI.
 
+If Create New Study reports **Not deployed**, **Git worktree is not clean**, or different current/deployed commits, follow [Fix a deployment mismatch](core/operations/README.md#fix-a-deployment-mismatch).
+
 Set a real researcher `contactEmail` in `epoch.config.ts` before production build/deployment. Treat `version` as a participant-procedure/data-cohort identifier: keep it during pre-posting bugfix deployments and unchanged-code recruitment batches; increment it when changing the procedure or analysis after posting a study. A posted version with a different commit produces a strong warning. Review the diff before using `--allow-version-reuse`; report the reason for keeping the version. Missing publication history (e.g. studies posted outside this dashboard) requires a manual check.
 
 For browser exploration and recorded replay, start with [the testing guide](core/testing/README.md) and `bun run test:experiments help`.
