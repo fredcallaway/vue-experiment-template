@@ -1,6 +1,6 @@
 # Running a study
 
-You lead the development of your experiment, whether you write the code yourself or use a coding agent to implement it. This guide follows the whole process, from your study design to participant payments.
+This guide should covers the full lifecycle of an experiment, from study design to participant payments.
 
 1. **Develop:** build the experiment and test the participant experience.
 2. **Verify data:** record test sessions and check the data you will analyze.
@@ -8,31 +8,84 @@ You lead the development of your experiment, whether you write the code yourself
 4. **Monitor:** follow recruitment and investigate incomplete sessions.
 5. **Pay:** review submissions and pay participants, including bonuses.
 
+*Note: this guide assumes that you will use an AI agent to do most of the coding. If you want to do it the old fashioned away, just replace "your agent" with "yourself" (and read the [technical] docs).*
+
+%% these don't fit here %%
 A **study** is a recruitment run on Prolific. A **session** is one participant's attempt at your experiment. A **version** groups sessions collected with the same experiment procedure; a pilot and a revised experiment should have different versions.
 
 The [Prolific pages](http://localhost:3031/prolific) connect submissions with sessions, and the [Data Viewer](http://localhost:3031/data) lets you explore the collected data by version or session.
 
 ## Developing your experiment
 
-Start with your study design: instructions, trial structure, stimuli, response and timing rules, conditions, and payments. Decide what the analysis tables should contain as part of that design, so recording and preprocessing are built with the task.
+Start with the paradigm. What does a trial look like? Tell this to your agent and ask for link to test it. If you know what variables you'll manipulate or vary, say so now. As long as your agent of choice reads AGENTS.md or CLAUDE.md (almost all do), it will know what to do.
 
-If you use a **coding agent**, give it that specification and ask it to follow your project's `AGENTS.md`, read `core/docs/guide/README.md`, and build from the template's [working examples](http://localhost:3031/examples). Ask it to run type checks and browser tests and explain how it verified the requested behavior.
+> Implement a random dot motion task with variable coherence. Give feedback after each trial.
 
-Open [Develop](http://localhost:3031/dev) to try each part as it is built. The outline lets you jump to a section; the Events and Data panels let you inspect what happens as you respond. Iterate with your agent until the behavior matches your design.
+Next comes design. Specify conditions, block structure, and incentives (bonuses). Watch your experiment's outline come to life and check that the different conditions do what you expect. Test specific sections by clicking on the outline (you can also pin sections so it stays there on reload).
 
-Walk through the complete experiment as a participant, including instructions, consent and contact details, task timing, and completion. Before posting the study, verify the recorded data as described next.
+> Each participant does four blocks of 30 trials. Coherence changes across blocks, either increasing or decreasing depending on condition. Give 5 points for each correct response (5 points = 1 cent).
 
-## Recording test data
+Now the data recording. Most likely, it's already being recorded and formatted nicely. But you should double-check the Data panel to the right as you go through the experiment (you might need to adjust the drop down in the top right). It should look like a table/dataframe you'd want to analyze.
+%% note: we should make sure the agent docs clearly advise recording all events both interactions and experiment-driven %%
 
-Verify the data while developing the experiment. In [Develop](http://localhost:3031/dev), the **Events** panel shows the current run's recorded events, and the **Data** panel shows the preprocessed rows as you respond. Use its selector to check each data view's columns and values against your design.
+> Add block index to the data view. Make sure RT is relative to motion onset.
 
-To save a test session to the database, open [Develop with debug recording](http://localhost:3031/dev?mode=debug) (`/dev?mode=debug`) and run the experiment. The `mode=debug` URL parameter enables automatic recording to the **debug** database. If your URL already has parameters, add `&mode=debug` instead.
+Finally, the instructions. For complex tasks, this usually needs a lot of human guidance.
 
-Ordinary Develop sessions let you inspect events and data views without automatically saving them to the database. Use debug recording for test sessions you want to inspect afterwards in the [Data Viewer](http://localhost:3031/data?mode=debug).
+> Create interactive instructions including practice trials for different coherence levels. Explain the bonus scheme. Do NOT tell participants about how coherence changes across blocks. Minimize text.
 
-Check that responses, timing, conditions, bonuses, and analysis rows match what you did in the task. Ask your agent to fix missing or incorrect data, then record another test session before collecting from participants.
+That's it!
+
+## Posting to Prolific
+
+Open [Prolific](http://localhost:3031/prolific) to connect your account. The first time you visit, you'll see a form to enter your prolific API token and project id (see instructions there).  %% TODO: Add a modal showing how to get the prolific token, opened by a link in the connection form %%
+
+To post a study, follow these three steps:
+
+1. Choose **Create New Study** and enter the description, reward, estimated duration, number of places, and eligibility criteria. Check the hourly rate and total cost (this doesn't include bonuses!)
+2. Click **Deploy Website** to publish the verified experiment. The page checks that the published copy matches your current version, and will complain if it doesn't (agents know how to fix it).
+3. Click **Create & Publish Study** when you are ready to recruit participants.
+
+FYI: The system records the git commit id (or "SHA") whenever you deploy. This way you'll know exactly which version of the experiment (the exact code) each participant saw.
+
+## Monitoring recruitment
+
+Open a study to follow incoming submissions. The page refreshes while you are viewing it. You can pause, resume, or stop recruitment, and add more places to a running study.
+
+Each submission pairs Prolific's status and completion code with a **data status**:
+
+- **full** — the session reached completion and its data is saved.
+- **partial** — the participant passed the task's no-return point but did not complete.
+- **minimal** — the participant left early, often during instructions.
+- **missing** — no matching session was found.
+
+Open a session to investigate an unexpected result. You can also message a participant from the submission table and see the previous correspondence associated with the study.
+
+If approved submissions have incomplete data, the page will offer **replacement places** targeted at their condition assignments. Review that proposal when filling gaps in a balanced design.
+
+## Paying participants
+
+After participants take part, use the study's review page to approve submissions for payment, request returns or reject submissions, and pay bonuses. The system brings each Prolific submission together with its recorded data to suggest a decision and bonus amount.
+
+### Default policy
+
+- Normal completion with full data defaults to **approve**.
+- A returned submission with incomplete data defaults to **no action**.
+- Ambiguous cases are left **unspecified** for you to decide.
+
+Inspect the session when needed, then choose the appropriate action for each row. You can override any proposal. The summary counts show how many decisions remain unspecified.
+
+### Bonuses
+
+If your experiment records bonuses, the review page reads those amounts from each session. It uses them for submissions being approved, already approved, or with full data; other submissions default to zero.
+
+You can adjust individual amounts by hand; adjusted amounts are marked. You can also import a CSV when bonuses were calculated outside the app. The table always shows the **total** intended bonus; if you pay a bonus and then increase it later, only the remaining portion will be paid out in the second round.
+
+Check the decisions and pending payment total, then click **Execute** to apply the review actions and bonus payments to Prolific.
 
 ## Viewing your data
+
+%% edit ligthly to reflect current position (focus on live) %%
 
 Open the [Data Viewer](http://localhost:3031/data?mode=debug) to inspect your **debug** test data. Once you recruit participants, switch to **live** data using the link at the top.
 
@@ -55,46 +108,3 @@ Recording stores the session's events while the experiment runs. The Data Viewer
 Analysis files are saved under `data/processed/live/<version>/` (or `debug` for test data). They include a session-summary CSV and the experiment's data views as CSV or JSON files. Table filters control what you see; saving exports the version's data, including rows hidden by a filter.
 
 The original session records are kept separately from these analysis files. A revised data view can produce new columns from previously recorded events; save again to update the files. It can only recover information the experiment actually recorded.
-
-## Posting to Prolific
-
-Open [Prolific](http://localhost:3031/prolific) to connect your account. This app uses the **Prolific API** to manage studies on your behalf: enter an API token from your Prolific account and choose a workspace and project when prompted.
-
-1. Choose **Create New Study** and enter the description, reward, estimated duration, number of places, and eligibility criteria. Check the hourly rate and total cost.
-2. Commit the experiment's changes, or ask your agent to do so, then click **Deploy Website** to publish the verified experiment. The page checks that the published copy matches your current version.
-3. Click **Create & Publish Study** when you are ready to recruit participants.
-
-## Monitoring recruitment
-
-Open a study to follow incoming submissions. The page refreshes while you are viewing it. You can pause, resume, or stop recruitment, and add more places to a running study.
-
-Each submission pairs Prolific's status and completion code with a **data status**:
-
-- **full** — the session reached completion and its data is saved.
-- **partial** — the participant passed the task's no-return point but did not complete.
-- **minimal** — the participant left early, often during instructions.
-- **missing** — no matching session was found.
-
-Open a session to investigate an unexpected result. You can also message a participant from the submission table and see the correspondence with the study.
-
-If approved submissions have incomplete data, the page can offer **replacement places** targeted at their condition assignments. Review that proposal when filling gaps in a balanced design.
-
-## Paying participants
-
-After participants take part, use the study's review page to approve submissions for payment, request returns or reject submissions, and pay bonuses. It brings each Prolific submission together with its recorded data to suggest a decision and bonus amount.
-
-### Default policy
-
-- Normal completion with full data defaults to **approve**.
-- A returned submission with incomplete data defaults to **no action**.
-- Ambiguous cases are left **unspecified** for you to decide.
-
-Inspect the session when needed, then choose the appropriate action for each row. You can override any proposal. The summary counts show how many decisions remain unspecified.
-
-### Bonuses
-
-If your experiment records bonuses, the review page reads those amounts from each session. It uses them for submissions being approved, already approved, or with full data; other submissions default to zero.
-
-You can adjust individual amounts by hand; adjusted amounts are marked. You can also import a CSV when bonuses were calculated outside the app. Bonuses already paid are subtracted from the intended totals, so another review pays only the remaining difference.
-
-Check the decisions and pending payment total, then click **Execute** to apply the review actions and bonus payments to Prolific.
