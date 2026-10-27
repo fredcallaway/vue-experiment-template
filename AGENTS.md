@@ -24,9 +24,3 @@ Run `bun run typecheck` after all edits.
 
 The user usually has a dev server already running. Before starting one, check whether the dev server is already serving (its port is set by the `dev` script in `package.json`) and reuse it. If nothing is running and browser verification is needed, start the dev server yourself. Never kill a dev server you did not start, and never use a broad `pkill -f "nuxt dev"` / `pkill -f "bun run dev"` — it cannot tell the user's server from yours.
 
-## Git
-
-In addition to any already established guidelines, follow these rules:
-
-- Commits that target a specific component should be prefixed by the component name, e.g. "EPage: add slot state"
-- A top-level commit may contain only a `core` pointer update when it records adoption of a verified core commit.
