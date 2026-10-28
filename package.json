@@ -15,7 +15,6 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "deploy": "bun core/operations/deploy-cli.ts",
     "ops": "bun core/operations/cli.ts"
   },
   "overrides": {

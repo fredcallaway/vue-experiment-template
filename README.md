@@ -10,192 +10,201 @@ An opinionated, end-to-end system for building and running online experiments th
 - **Tools for you and your coding agent:** reusable experiment components, working examples, agent-facing documentation, type checking, and automated browser tests.
 - **Optional session recordings** through [PostHog](https://posthog.com/session-replay) to see how participants experienced the task.
 
-After setup, open `/docs` in the running app for a guide to developing and running a study, whether you write code or use an agent. Technical explanations and examples follow.
+Start with [installation](#installation) and [Firebase setup](#firebase-setup) below. Once the app is running, open `/docs` for the guide to developing and running a study, whether you write code or use an agent.
 
 ## Installation
 
-Open a terminal and navigate to a directory where you want the project to live. Run e.g.
-`DEST_DIR=my-sweet-experiment` to set the directory to clone into. Then paste the
-following code.
+Install [Git](https://git-scm.com/downloads), [Bun](https://bun.com/docs/installation), and the current [Node.js LTS](https://nodejs.org/en/download) if needed. Node is used by the Firebase CLI and browser-testing tools. Configure your Git name and email before creating the project; GitHub's [Git setup guide](https://docs.github.com/en/get-started/git-basics/set-up-git) covers this.
+
+Open a terminal in the directory where you keep your projects. Choose a new directory name for `DEST_DIR`, then run:
 
 ```bash
-# Configuration.
+DEST_DIR="my-experiment"
 TEMPLATE_REPO="https://github.com/fredcallaway/vue-experiment-template.git"
-: "${DEST_DIR:=vue-experiment}"
 
-# Clone the template, including submodules
-git clone --recurse-submodules "$TEMPLATE_REPO" "$DEST_DIR"
+# Clone the current lab release, including its pinned core submodule.
+git clone --branch release/1.0 --recurse-submodules "$TEMPLATE_REPO" "$DEST_DIR"
 cd "$DEST_DIR"
 
-# Replace the template history with a single fresh root commit
+# Start your experiment's own history from the template's files.
 NEW_ROOT_COMMIT="$(git commit-tree HEAD^{tree} -m "Initial commit from $TEMPLATE_REPO")"
 git reset --soft "$NEW_ROOT_COMMIT"
 git branch -M main
-
-# Remove the template remote and branch tracking
 git branch --unset-upstream 2>/dev/null || true
-git remote remove origin 2>/dev/null || true
-git remote remove upstream 2>/dev/null || true
+git remote remove origin
 ```
 
-You can then create a github repo for your own project. If you have the [github
-CLI](https://cli.github.com/) installed, you can use `gh repo create`. Otherwise, create
-it on github.com and run `git remote set origin YOUR_GITHUB_URL`.
-
-
-## Setup
-
-*Note: All the commands assume that you are in the directory that contains this README.md
-file.*
-
-Install [bun](https://bun.com/) if you don't have it. You can also use vanilla node with
-npm or pnpm if you prefer. Bun is much faster at installing packages.
-
-```
-curl -fsSL https://bun.sh/install | bash
-```
-
-Then install dependencies and start the development server.
-
-```
-bun install
-bun dev
-```
-
-The experiment will then be available at http://localhost:3030. If you're already hosting
-a site on port 3030, it will automatically use a different port; check the command output.
-You can configure the port in package.json.
-
-### Firebase
-
-*Note: you don't actually need to do this until you're ready to deploy your experiment.*
-
-#### Create your first project
-
-We use firebase for hosting and database.
-
-Go to https://firebase.google.com/ and make an account. **DO NOT USE YOUR .EDU EMAIL**
-because your school may impose restrictions on your google cloud usage. Then create a
-project for your experiment.
-
-1. Ensure you're logged in to a standard google (@gmail.com) account. Firebase will
-   automatically use your currently active google account. If you're signed in on a .edu
-   account, it may or may not work depending on your school.
-2. Go to console.firebase.google.com
-3. Click  "get started by setting up a firebase project"
-4. Enter a new name not used before and check I agree to the TOS
-
-*Note: for subsequent experiments, you should be able to skip this step and create new
-projects via the CLI.*
-
-After creating your project, install the firebase CLI and log in.
-
-```
-bun install -g firebase-tools
-firebase login
-```
-
-#### Set up web hosting
-
-Next, initialize web hosting for your new project. 
-
-```
-firebase init hosting
-```
-
-Choose **Use an existing project** and select the project you just created on the web
-console. Then make the following selections:
-
-
-✔ What do you want to use as your public directory? **.output/public** ✔ Configure as a
-single-page app (rewrite all urls to /index.html)? **Yes** ✔ Set up automatic builds and
-deploys with GitHub? **No**
-
-
-> Pro-tip: for your future projects, you can skip the web console and create a new project
-> from the command line by choosing "Create a new project" at the first prompt.
-
-
-#### Set up database
-
-```
-firebase init database
-```
-
-Accept all the defaults (hit enter on every prompt). We will reset database.rules.json
-later so it doesn't matter if you accept or deny the overwrite.
-
-
-#### Create web app and update configuration files
-
-```
-firebase apps:create web web
-rm -f firebase.config.json
-firebase apps:sdkconfig WEB -o firebase.config.json
-git checkout firebase.json database.rules.json
-rm -f public/index.html
-```
-
-Set the researcher contact email and planned experiment version in `epoch.config.ts` (see [deployment safety](core/operations/README.md#configure-contact-and-version)). Commit your configuration before deploying:
-
-**Note:** you may get a warning from GitHub
-about an exposed secret (the firebase apiKey). This is a false alarm; the api key is
-intended to be public.
-
-```
-git add .firebaserc firebase.config.json epoch.config.ts 
-git commit -m 'firebase configuration'
-```
-
-Deploy database rules explicitly, then deploy and verify the website:
+Create an empty repository on [GitHub](https://github.com/new), without a README, license, or `.gitignore`. Copy its repository URL, replace `YOUR_GITHUB_URL` below, and connect it:
 
 ```bash
-firebase deploy --only database --project <your-project-id>
-bun run deploy
+git remote add origin YOUR_GITHUB_URL
+git push -u origin main
 ```
 
-`bun run deploy` deploys static Hosting only and reports the verified Hosting URL, SHA, and version. It requires a clean checkout and a real contact email. Before recruitment, review any warning about changed code under an already posted version. Keep the version for pre-posting fixes and unchanged-code batches; increment it for changes to the procedure or analysis after posting. See [the operations guide](core/operations/README.md) for agent commands, explicit version-warning overrides, and deployment recovery.
+Run the remaining commands from your experiment's root directory, which contains this README. Install dependencies:
 
-
-### Development environment
-
-I strongly recommend using VSCode or Cursor with the following extensions:
-
-- UnoCSS
-- Vue.js
-- ESLint
-- Nuxtr
-
-Agent entry point: [AGENTS.md](AGENTS.md), which links to the project guide, operations CLI, and browser-testing tools.
-
-# FAQ
-
-## I'm getting an error that I don't understand
-
-If you're getting a confusing error that doesn't seem to be related to your own code, it's
-most likely a problem with the **nuxt cache**. Run this:
-```
-pkill bun; rm -rf .nuxt; bun run dev
+```bash
+bun install
 ```
 
-If that doesn't work, try reinstalling all packages next:
+## Firebase setup
+
+Firebase provides the hosted website and Realtime Database. Each experiment needs its own Firebase project. Complete this setup before recording test sessions or using the data and Prolific tools: the inherited `firebase.config.json` connects to the template's shared project, including during local development.
+
+### 1. Create or choose your Google account
+
+Firebase uses a Google account; there is no separate Firebase password.
+
+1. If you need an account, open [Google account creation](https://accounts.google.com/signup), choose personal use, and follow the prompts to choose a Gmail address and password. Complete any verification Google requests. You can also use an existing non-Gmail email address; Google's [account-creation guide](https://support.google.com/accounts/answer/27441) explains that option.
+2. Use a personal Google account for this walkthrough. School-managed accounts may restrict Google Cloud access; agree with your lab who should own the eventual research project. Invite collaborators through the project's **Users and permissions** settings so everyone uses their own login.
+3. Open the [Firebase console](https://console.firebase.google.com/) and sign in. Check the profile icon to confirm the intended account, especially if your browser is signed into several Google accounts.
+
+### 2. Create your first Firebase project
+
+1. Choose **Create a project**, enter your experiment's name, and review its generated **project ID**. The ID is distinct from the display name and cannot be changed after creation.
+2. Accept the Firebase terms when prompted. Google Analytics and Gemini assistance are optional; they are not needed for this template.
+3. Create the project and open its overview. Record the project ID from **Project settings → General**.
+4. Start on the **Spark** plan. This template's static Hosting and default Realtime Database can use its free quotas without a payment method. Check [Firebase pricing](https://firebase.google.com/pricing) before planning collection. Linking a Cloud Billing account upgrades the project to the paid **Blaze** plan; upgrading is a separate decision. See [Firebase's plan explanation](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans).
+
+### 3. Install and sign into the Firebase CLI
+
+```bash
+bun install -g firebase-tools
+firebase --version
+firebase login
+firebase login:list
+firebase projects:list
 ```
-pkill bun; rm -rf node_modules; rm -rf .nuxt; bun i; bun run dev
+
+The login command opens your browser. Select the same Google account you used in the console. Confirm that `projects:list` includes your new project. For an existing CLI login, `firebase login:add` adds another account and `firebase login:use your-account@gmail.com` selects it. See the [Firebase CLI guide](https://firebase.google.com/docs/cli) if installation or authentication fails.
+
+Set the following variable to your project's actual ID, then link this checkout:
+
+```bash
+EXPERIMENT_FIREBASE_PROJECT_ID="your-project-id"
+firebase use --add
 ```
 
-If it's still not working, use git to checkout a previous commit that was working. 
-- If the old version *does not work*, skip to the next section.
-- If the old version *does work*, then it's probably a bug in your code or the template.
-  If you think it's the latter OR you haven't fixed it in 10 minutes, [post an issue on
-  github](https://github.com/fredcallaway/vue-experiment-template/issues).
+Select your new project and enter `default` as its alias. This writes `.firebaserc`. Confirm the selected ID with `firebase use`. Keep this terminal open for the commands below; if you reopen it, set `EXPERIMENT_FIREBASE_PROJECT_ID` again.
 
+### 4. Create Realtime Database
 
-### MFILE and/or EBADF errors
+1. In your Firebase project's console, open **Realtime Database** and choose **Create database**. This template uses Realtime Database, rather than Cloud Firestore.
+2. Choose a database region appropriate for the lab's data requirements. Record the database URL shown after creation; its hostname depends on the region.
+3. For a disposable setup project containing only synthetic data, choose **Test mode** and note when its rules expire. Test mode permits public reads and writes. For a research project, obtain the lab's approved database rules before recording participant data. See [Firebase's database setup and rules guide](https://firebase.google.com/docs/database/web/start).
 
-This can happen if you have many extraneous files, for example a python virtual
-environment. Move those into a separate directory. If it persists (even after clearing
-.nuxt and node_modules), you might need to restart your computer.
+The inherited `database.rules.json` also permits public reads and writes, until 2030. It is not a production access-control policy. Review and replace it with the lab's approved rules before any database-rules deployment. Hosting deployment below leaves database rules unchanged.
 
-### Error: [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin
+### 5. Register the web app and replace its configuration
 
-Try removing the nuxt cache.
+In **Project overview**, choose the web icon (`</>`), name the app, and select **Register app**. The template already includes the Firebase SDK and initializes it, so you only need the new configuration. Copy the **App ID** from **Project settings → General → Your apps**; it looks like `1:123456789:web:abcdef`.
+
+```bash
+EXPERIMENT_FIREBASE_APP_ID="your-web-app-id"
+firebase apps:sdkconfig WEB "$EXPERIMENT_FIREBASE_APP_ID" \
+  --project "$EXPERIMENT_FIREBASE_PROJECT_ID" --out firebase.config.json
+```
+
+Confirm overwriting the inherited file. Open `firebase.config.json` and check that `projectId`, `appId`, and `databaseURL` match your new project, app, and database. Replace the full configuration, including its API key and other identifiers. If `databaseURL` is missing, confirm that Realtime Database exists and retrieve the config again, or add its exact URL from the console. See [Firebase web-app setup](https://firebase.google.com/docs/web/setup).
+
+The web configuration, including its API key, is intended to be public and can be committed. Database rules control access to data. Keep account credentials and private tokens out of Git.
+
+### 6. Configure Hosting
+
+Run:
+
+```bash
+firebase init hosting --project "$EXPERIMENT_FIREBASE_PROJECT_ID"
+```
+
+If asked to select a project, use the existing project you just created. Choose:
+
+- **Public directory:** `.output/public`
+- **Configure as a single-page app:** Yes
+- **Automatic builds/deploys with GitHub:** No
+- **Overwrite an existing index.html:** No, if prompted
+
+Inspect `firebase.json`. Its Hosting public directory should be `.output/public`, with a `**` rewrite to `/index.html`. Keep the existing `database.rules.json` reference. The template's generator produces the website in that public directory; Firebase initialization may create a temporary welcome page there, which generation replaces.
+
+### 7. Save the project configuration
+
+Set `contactEmail` in `epoch.config.ts` to your real researcher address and set `version` for your planned participant cohort. Review your changes and commit:
+
+```bash
+git diff -- firebase.config.json firebase.json epoch.config.ts
+git add .firebaserc firebase.config.json firebase.json epoch.config.ts
+git commit -m "firebase: configure experiment project"
+```
+
+If a development server was running during setup, restart it so it loads your new configuration.
+
+## Develop your experiment
+
+Start the app:
+
+```bash
+bun run dev
+```
+
+Open the local URL printed in the terminal, normally [http://localhost:3030](http://localhost:3030). If that port is occupied, Nuxt may select another port. The following routes are relative to that URL:
+
+- `/docs` — the researcher workflow, data recording/export, technical explanations, and publishing guidance.
+- `/dev` — build and inspect your experiment with the outline, event log, and data views.
+- `/examples/study` — a complete example experiment.
+- `/examples/trial` — a trial component with response events and a component-local data view.
+
+Your experiment lives at the root, especially `components/Experiment.vue`, the other files under `components/`, and `epoch.config.ts`. [AGENTS.md](AGENTS.md) routes coding agents to the [shared project guide](core/docs/guide/README.md) and [live example sources](core/internal/examples/README.md). Use the [styling guide](core/docs/guide/styling.md) for UnoCSS conventions.
+
+For an editor, use VS Code or Cursor with the Vue.js, UnoCSS, ESLint, and Nuxtr extensions.
+
+## Publish the website
+
+After developing and checking the experiment, commit your changes in the experiment repository and any intentionally edited submodules. Deployment requires a clean checkout with matching submodule commits and a real contact email.
+
+```bash
+bun run ops -- deploy inspect
+bun run ops -- deploy run
+```
+
+Inspection reports the project/site from `firebase.config.json` and `firebase.json`, source revision, and experiment version. Confirm the target before running deployment. Deployment generates the website, uploads static Hosting, verifies the hosted build, and records its SHA/version. It reports the Hosting URL and should finish with `state: "tracked"`.
+
+The [operations guide](core/operations/README.md) explains version warnings, deployment recovery, and preparing recruitment. The in-app `/docs` guide explains posting, monitoring, payment, and data export. Publishing the website and posting a Prolific study are separate actions.
+
+## Core versions and updates
+
+`core/` is a Git submodule. Each experiment commit pins one exact core commit; cloning with `--recurse-submodules` retrieves that version. When opening an existing experiment clone, restore its recorded submodule version with:
+
+```bash
+git submodule update --init --recursive
+```
+
+For a deliberate template update, choose a reviewed core commit, consult [core/CHANGES.md](core/CHANGES.md) for required migrations, and have your coding agent apply and verify the update. Commit the adopted `core` pointer separately from experiment changes. Updating core can change experiment behavior, so test the experiment before collecting data with the new version.
+
+## Troubleshooting
+
+### Confusing Nuxt errors
+
+Stop this project's development server with **Ctrl+C in its terminal**, then clear its generated cache and restart:
+
+```bash
+rm -rf .nuxt
+bun run dev
+```
+
+If that fails, stop this server again, reinstall dependencies, and restart:
+
+```bash
+rm -rf node_modules .nuxt
+bun install
+bun run dev
+```
+
+These commands only remove generated files. Preserve your source changes when comparing against an earlier working commit. If you suspect a template bug, [open an issue](https://github.com/fredcallaway/vue-experiment-template/issues) with the error and steps to reproduce it.
+
+### EMFILE or EBADF errors
+
+Large unrelated directories inside the project, such as a Python virtual environment, can exhaust file watchers. Move them outside the project and restart its development server.
+
+### A composable requires the Nuxt instance
+
+Restart after clearing `.nuxt` as above. If the error persists, ask your coding agent to check where the composable is called; Vue/Nuxt composables that need component context belong inside setup or the appropriate plugin.
