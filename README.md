@@ -55,9 +55,10 @@ Firebase provides the hosted website and Realtime Database. Each experiment need
 
 The lab administrator owns the Firebase project and completes the [administrator setup](#create-and-configure-a-project-as-administrator), including its service account. Students receive a configured experiment repository and a project-specific service-account JSON key.
 
-Configure the key once per checkout, or ask your coding agent to do it:
+Install the Firebase CLI and configure the key once per checkout, or ask your coding agent to do it:
 
 ```bash
+bun install -g firebase-tools
 bun run ops -- firebase-auth configure --key "/absolute/path/to/service-account.json"
 ```
 
