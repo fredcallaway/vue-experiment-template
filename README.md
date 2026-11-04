@@ -51,22 +51,52 @@ bun install
 
 Firebase provides the hosted website and Realtime Database. Each experiment needs its own Firebase project. Complete this setup before recording test sessions or using the data and Prolific tools: the inherited `firebase.config.json` connects to the template's shared project, including during local development.
 
-### 1. Create or choose your Google account
+### Use a lab-managed project as a student
+
+The lab administrator owns the Firebase project and completes the [administrator setup](#create-and-configure-a-project-as-administrator), including its service account. Students can develop and deploy with a project-specific service-account key, without creating a Google account or signing into Firebase.
+
+Obtain the configured experiment repository, its Firebase project ID, and the service-account JSON key from the administrator. The repository should contain the project's full `firebase.config.json`, `.firebaserc`, Hosting configuration, and a real researcher contact email. Store the private key outside the repository, for example at `~/.config/experiment-credentials/your-project-id.json`.
+
+From the experiment root, open a terminal dedicated to this project and run:
+
+```bash
+bun install -g firebase-tools
+EXPERIMENT_FIREBASE_PROJECT_ID="your-project-id"
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/experiment-credentials/$EXPERIMENT_FIREBASE_PROJECT_ID.json"
+chmod 600 "$GOOGLE_APPLICATION_CREDENTIALS"
+
+# Keep cached Firebase logins and tokens for other projects out of this terminal.
+export XDG_CONFIG_HOME="$HOME/.config/experiment-cli/$EXPERIMENT_FIREBASE_PROJECT_ID"
+unset FIREBASE_TOKEN
+
+firebase hosting:sites:list --project "$EXPERIMENT_FIREBASE_PROJECT_ID"
+firebase use "$EXPERIMENT_FIREBASE_PROJECT_ID"
+```
+
+The site-list command should show this experiment's Hosting site. The CLI reads the JSON key through Application Default Credentials; see [Firebase CLI authentication](https://firebase.google.com/docs/cli#use_the_cli_with_ci_systems). Keep the isolated configuration directory free of human Firebase logins. Run `bun run dev` and the deployment commands from this same terminal so the dashboard server and CLI inherit the credentials. Set these variables again when opening a new terminal; restart a development server that was started before the credentials were configured.
+
+Continue with [developing the experiment](#develop-your-experiment) and [publishing the website](#publish-the-website). The key authorizes Hosting operations. Database access for participant recording, deployment tracking, and data tools is controlled separately by database rules; the current tracking/data adapters do not use this key. Database setup remains the administrator's responsibility.
+
+### Create and configure a project as administrator
+
+Complete steps 1–8 using the account that will retain ownership of the lab's project. Administrator provisioning uses your Google login; students use the service-account workflow above.
+
+#### 1. Create or choose your Google account
 
 Firebase uses a Google account; there is no separate Firebase password.
 
 1. If you need an account, open [Google account creation](https://accounts.google.com/signup), choose personal use, and follow the prompts to choose a Gmail address and password. Complete any verification Google requests. You can also use an existing non-Gmail email address; Google's [account-creation guide](https://support.google.com/accounts/answer/27441) explains that option.
-2. Use a personal Google account for this walkthrough. School-managed accounts may restrict Google Cloud access; agree with your lab who should own the eventual research project. Invite collaborators through the project's **Users and permissions** settings so everyone uses their own login.
+2. Choose the account that will own the lab's project. School-managed accounts may restrict Google Cloud access; settle project ownership before creating it. Students using the service-account workflow do not need individual project membership.
 3. Open the [Firebase console](https://console.firebase.google.com/) and sign in. Check the profile icon to confirm the intended account, especially if your browser is signed into several Google accounts.
 
-### 2. Create your first Firebase project
+#### 2. Create your first Firebase project
 
 1. Choose **Create a project**, enter your experiment's name, and review its generated **project ID**. The ID is distinct from the display name and cannot be changed after creation.
 2. Accept the Firebase terms when prompted. Google Analytics and Gemini assistance are optional; they are not needed for this template.
 3. Create the project and open its overview. Record the project ID from **Project settings → General**.
 4. Start on the **Spark** plan. This template's static Hosting and default Realtime Database can use its free quotas without a payment method. Check [Firebase pricing](https://firebase.google.com/pricing) before planning collection. Linking a Cloud Billing account upgrades the project to the paid **Blaze** plan; upgrading is a separate decision. See [Firebase's plan explanation](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans).
 
-### 3. Install and sign into the Firebase CLI
+#### 3. Install and sign into the Firebase CLI
 
 ```bash
 bun install -g firebase-tools
@@ -87,7 +117,7 @@ firebase use --add
 
 Select your new project and enter `default` as its alias. This writes `.firebaserc`. Confirm the selected ID with `firebase use`. Keep this terminal open for the commands below; if you reopen it, set `EXPERIMENT_FIREBASE_PROJECT_ID` again.
 
-### 4. Create Realtime Database
+#### 4. Create Realtime Database
 
 1. In your Firebase project's console, open **Realtime Database** and choose **Create database**. This template uses Realtime Database, rather than Cloud Firestore.
 2. Choose a database region appropriate for the lab's data requirements. Record the database URL shown after creation; its hostname depends on the region.
@@ -95,7 +125,7 @@ Select your new project and enter `default` as its alias. This writes `.firebase
 
 The inherited `database.rules.json` also permits public reads and writes, until 2030. It is not a production access-control policy. Review and replace it with the lab's approved rules before any database-rules deployment. Hosting deployment below leaves database rules unchanged.
 
-### 5. Register the web app and replace its configuration
+#### 5. Register the web app and replace its configuration
 
 In **Project overview**, choose the web icon (`</>`), name the app, and select **Register app**. The template already includes the Firebase SDK and initializes it, so you only need the new configuration. Copy the **App ID** from **Project settings → General → Your apps**; it looks like `1:123456789:web:abcdef`.
 
@@ -111,7 +141,7 @@ The CLI downloads to a new temporary file; the copy command replaces the inherit
 
 The web configuration, including its API key, is intended to be public and can be committed. Database rules control access to data. Keep account credentials and private tokens out of Git.
 
-### 6. Configure Hosting
+#### 6. Configure Hosting
 
 Run:
 
@@ -128,7 +158,7 @@ If asked to select a project, use the existing project you just created. Choose:
 
 Inspect `firebase.json`. Its Hosting public directory should be `.output/public`, with a `**` rewrite to `/index.html`. Keep the existing `database.rules.json` reference. The template's generator produces the website in that public directory; Firebase initialization may create a temporary welcome page there, which generation replaces.
 
-### 7. Save the project configuration
+#### 7. Save the project configuration
 
 Set `contactEmail` in `epoch.config.ts` to your real researcher address and set `version` for your planned participant cohort. Review your changes and commit:
 
@@ -139,6 +169,15 @@ git commit -m "firebase: configure experiment project"
 ```
 
 If a development server was running during setup, restart it so it loads your new configuration.
+
+#### 8. Create the project's deployment service account
+
+1. In [Google Cloud → IAM & Admin → Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts), select this experiment's project and create a dedicated account such as `student-deployer`. Enable the IAM API if prompted. See [Google's service-account creation guide](https://docs.cloud.google.com/iam/docs/service-accounts-create).
+2. Grant that service account these roles on this project: **Firebase Hosting Admin** (`roles/firebasehosting.admin`) and **API Keys Viewer** (`roles/serviceusage.apiKeysViewer`). This pair was sufficient for the template's tracked static Hosting deployment; Firebase documents both in its [Hosting roles](https://firebase.google.com/docs/projects/iam/roles-predefined-product#hosting). These permissions cover deployment, while you retain responsibility for project creation, billing, and database rules.
+3. Open the new service account, choose **Keys → Add key → Create new key**, select **JSON**, and download the key. See [Google's key-management guide](https://docs.cloud.google.com/iam/docs/keys-create-delete). Store it outside the experiment repository and transfer it securely to the student. Keep it out of Git, deployed files, and logs; delete its key in IAM when its deployment access is no longer needed.
+4. Give the student the project ID and configured repository, then follow [the student credential steps](#use-a-lab-managed-project-as-a-student). The committed Firebase web configuration is public; the downloaded service-account key is private.
+
+For an authentication check on a machine already used by an administrator, use a fresh isolated Firebase CLI configuration and temporarily point `GOOGLE_APPLICATION_CREDENTIALS` at a nonexistent file before running the site-list command. It should fail authentication. Set it back to the student's valid key file and repeat; it should succeed. This also checks that a cached human login is not taking precedence. Keep the administrator's logged-in terminal separate from this check. Allow a short delay for newly created accounts or role grants to propagate before retrying an initial permissions failure.
 
 ## Develop your experiment
 
