@@ -101,11 +101,13 @@ In **Project overview**, choose the web icon (`</>`), name the app, and select *
 
 ```bash
 EXPERIMENT_FIREBASE_APP_ID="your-web-app-id"
+EXPERIMENT_FIREBASE_CONFIG_DIR="$(mktemp -d)"
 firebase apps:sdkconfig WEB "$EXPERIMENT_FIREBASE_APP_ID" \
-  --project "$EXPERIMENT_FIREBASE_PROJECT_ID" --out firebase.config.json
+  --project "$EXPERIMENT_FIREBASE_PROJECT_ID" --out "$EXPERIMENT_FIREBASE_CONFIG_DIR/firebase.config.json"
+cp "$EXPERIMENT_FIREBASE_CONFIG_DIR/firebase.config.json" firebase.config.json
 ```
 
-Confirm overwriting the inherited file. Open `firebase.config.json` and check that `projectId`, `appId`, and `databaseURL` match your new project, app, and database. Replace the full configuration, including its API key and other identifiers. If `databaseURL` is missing, confirm that Realtime Database exists and retrieve the config again, or add its exact URL from the console. See [Firebase web-app setup](https://firebase.google.com/docs/web/setup).
+The CLI downloads to a new temporary file; the copy command replaces the inherited configuration. Open `firebase.config.json` and check that `projectId`, `appId`, and `databaseURL` match your new project, app, and database. Replace the full configuration, including its API key and other identifiers. If `databaseURL` is missing, confirm that Realtime Database exists and retrieve the config again, or add its exact URL from the console. See [Firebase web-app setup](https://firebase.google.com/docs/web/setup).
 
 The web configuration, including its API key, is intended to be public and can be committed. Database rules control access to data. Keep account credentials and private tokens out of Git.
 
