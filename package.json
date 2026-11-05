@@ -6,7 +6,8 @@
     "core"
   ],
   "scripts": {
-    "test": "bun test core && node --test core/testing/browser.integration.mjs core/testing/agent/session.integration.mjs",
+    "test": "bun test core && node --test scripts/setup.integration.test.mjs core/testing/browser.integration.mjs core/testing/agent/session.integration.mjs",
+    "test:setup": "node --test scripts/setup.integration.test.mjs",
     "test:experiments": "node core/testing/cli.mjs",
     "test:testing": "node core/testing/verify.mjs",
     "typecheck": "bun nuxt typecheck",
