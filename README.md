@@ -59,4 +59,4 @@ The Docs page will tell you everything else you need to know! There's also a han
 
 Start with [AGENTS.md](AGENTS.md). Detailed CLI deployment and recovery procedures live in the [operations guide](core/operations/README.md).
 
-To prepare the block a lab manager sends to a student, follow [Prepare a student handoff](core/docs/guide/student-handoff.md). This uses an already provisioned Firebase project.
+When a lab manager asks for a setup block, follow [Prepare a student handoff](core/docs/guide/student-handoff.md). It covers creating a fresh Firebase project and returning the complete private block, with defaults for unspecified details.
