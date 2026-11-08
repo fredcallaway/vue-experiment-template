@@ -59,4 +59,4 @@ The Docs page will tell you everything else you need to know! There's also a han
 
 Start with [AGENTS.md](AGENTS.md). Detailed CLI deployment and recovery procedures live in the [operations guide](core/operations/README.md).
 
-When a lab manager asks for a setup block, follow [Prepare a student handoff](core/docs/guide/student-handoff.md). Ask for the project name and researcher contact email if either is missing, then follow the provisioning steps to return the complete private block.
+When a lab manager asks for a setup block, follow [Prepare a student handoff](core/docs/guide/student-handoff.md). Ask for the project name and researcher contact email if either is missing, then follow the provisioning steps and return the complete block in the manager's private chat.
