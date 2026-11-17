@@ -113,6 +113,7 @@ export async function createExperiment(block, destination = resolve(block.name))
     command(staging, 'git', ['clone', '--no-checkout', '--', block.template.repository, root])
     command(root, 'git', ['checkout', '--detach', block.template.commit])
     command(root, 'git', ['submodule', 'update', '--init', '--recursive'])
+    command(root, 'git', ['config', '--local', 'submodule.recurse', 'true'])
     if (!existsSync(join(root, 'core/operations/firebase-auth.ts'))) {
       throw new Error('This template revision does not support student setup; ask your manager for an updated block')
     }

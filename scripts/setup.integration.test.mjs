@@ -147,6 +147,30 @@ test('a generated block creates a clean project from stdin with pinned core and 
   assert.equal(JSON.parse(observed).token, '')
 })
 
+test('pulling an experiment checks out the newly pinned core commit', async t => {
+  const f = await fixture(t)
+  const result = await run(installer, [], { cwd: f.root, env: f.env, input: f.text })
+  assert.equal(result.code, 0, result.stderr)
+  const destination = join(f.root, 'student-experiment')
+  const upstream = join(f.root, 'upstream.git'), maintainer = join(f.root, 'maintainer')
+  f.gitRun(f.root, 'clone', '--bare', destination, upstream)
+  f.gitRun(destination, 'remote', 'add', 'origin', upstream)
+  f.gitRun(destination, 'fetch', 'origin')
+  f.gitRun(destination, 'branch', '--set-upstream-to=origin/main', 'main')
+  f.gitRun(f.root, 'clone', upstream, maintainer)
+  f.gitRun(maintainer, 'submodule', 'update', '--init', '--recursive')
+  const coreCommit = f.gitRun(join(f.root, 'core-source'), 'rev-parse', 'HEAD')
+  f.gitRun(join(maintainer, 'core'), 'checkout', coreCommit)
+  f.gitRun(maintainer, 'add', 'core')
+  f.gitRun(maintainer, 'commit', '-m', 'Adopt newer core')
+  f.gitRun(maintainer, 'push', 'origin', 'main')
+
+  f.gitRun(destination, 'pull')
+
+  assert.equal(f.gitRun(join(destination, 'core'), 'rev-parse', 'HEAD'), coreCommit)
+  assert.equal(f.gitRun(destination, 'status', '--porcelain'), '')
+})
+
 test('file input supports a chosen destination and installs a missing Firebase CLI once', async t => {
   const f = await fixture(t, { firebaseInstalled: false })
   const result = await run(installer, ['--file', f.file, '--directory', 'chosen-folder'], { cwd: f.root, env: f.env })
