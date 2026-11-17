@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { command, formatHandoff, TEMPLATE_REPOSITORY } from './create-experiment.mjs'
 
 export async function prepareStudent(options) {
@@ -31,8 +31,14 @@ export async function prepareStudent(options) {
     if (sites?.length !== 1) throw new Error('The Hosting target must resolve to exactly one site')
     site = sites[0]
   }
-  const configuredKey = ['rev-parse', '--git-path', 'firebase-auth/service-account.json']
-  const keyFile = options.key ?? command(project, 'git', configuredKey)
+  const authModule = pathToFileURL(resolve(template, 'core/operations/firebase-auth.ts')).href
+  const keyFile = options.key ?? command(project, process.execPath, ['--input-type=module', '--eval',
+    `const {resolveFirebaseCredentials} = await import(${JSON.stringify(authModule)});
+     try {
+       const result = await resolveFirebaseCredentials(process.cwd());
+       if (result.source.source !== 'project-key') throw new Error('Configure a project key or supply --key <file>');
+       console.log(result.environment.GOOGLE_APPLICATION_CREDENTIALS);
+     } catch (error) { console.error(error.message); process.exitCode = 1; }`])
   const serviceAccount = await readJson(resolve(project, keyFile), 'service-account key')
   const block = {
     schemaVersion: 1,

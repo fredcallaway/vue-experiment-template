@@ -36,7 +36,7 @@ async function fixture(t, { firebaseInstalled = true } = {}) {
   const bin = join(root, 'bin'), log = join(root, 'commands.jsonl')
   for (const path of [template, core, project, bin]) await mkdir(path)
   const env = {
-    ...process.env, PATH: `${bin}:${dirname(git)}:/usr/bin:/bin`, GIT_ALLOW_PROTOCOL: 'file:https',
+    ...process.env, HOME: join(root, 'home'), PATH: `${bin}:${dirname(git)}:/usr/bin:/bin`, GIT_ALLOW_PROTOCOL: 'file:https',
     GIT_AUTHOR_NAME: 'Setup test', GIT_AUTHOR_EMAIL: 'setup@lab.test',
     GIT_COMMITTER_NAME: 'Setup test', GIT_COMMITTER_EMAIL: 'setup@lab.test',
     SETUP_TEST_LOG: log, SETUP_TEST_BIN: bin,
@@ -90,7 +90,8 @@ if (args[0] === 'install' && args.includes('--global')) {
   process.exit(0);
 }
 if (JSON.parse(fs.readFileSync('firebase.config.json')).projectId !== 'student-project') process.exit(20);
-const credential = JSON.parse(fs.readFileSync('.git/firebase-auth/service-account.json'));
+const credentialFile = path.join(process.env.HOME, '.config/experiment-template/firebase/student-project/service-account.json');
+const credential = JSON.parse(fs.readFileSync(credentialFile));
 if (credential.project_id !== 'student-project') process.exit(21);
 if (process.env.SETUP_TEST_FAIL === '1' && args[0] === 'ci') process.exit(22);
 `)
@@ -101,7 +102,8 @@ if (process.env.SETUP_TEST_FAIL === '1' && args[0] === 'ci') process.exit(22);
   assert.equal(prepared.code, 0, prepared.stderr)
   assert.ok(!prepared.stdout.includes(privateKey))
   const text = await readFile(file, 'utf8')
-  return { root, template, project, key, config, coreCommit, env, gitRun, file, text, log }
+  return { root, template, project, key, config, coreCommit,
+    env: { ...env, HOME: join(root, 'student-home') }, gitRun, file, text, log }
 }
 
 test('a generated block creates a clean project from stdin with pinned core and private credentials', async t => {
@@ -123,8 +125,9 @@ test('a generated block creates a clean project from stdin with pinned core and 
   assert.equal(f.gitRun(destination, 'status', '--porcelain'), '')
   assert.equal(f.gitRun(join(destination, 'core'), 'rev-parse', 'HEAD'), f.coreCommit)
   assert.equal(await readFile(join(destination, 'core/pinned.txt'), 'utf8'), 'reviewed core')
-  assert.deepEqual(await readJson(join(destination, '.git/firebase-auth/service-account.json')), f.key)
-  assert.equal((await stat(join(destination, '.git/firebase-auth/service-account.json'))).mode & 0o777, 0o600)
+  const credentialFile = join(f.env.HOME, '.config/experiment-template/firebase/student-project/service-account.json')
+  assert.deepEqual(await readJson(credentialFile), f.key)
+  assert.equal((await stat(credentialFile)).mode & 0o777, 0o600)
   assert.ok(!(await readdir(join(destination, '.git'))).includes('student-setup-key.json'))
   assert.ok(!f.gitRun(destination, 'show', 'HEAD').includes(privateKey))
   assert.ok(!`${result.stdout}${result.stderr}`.includes(privateKey))
@@ -137,7 +140,7 @@ test('a generated block creates a clean project from stdin with pinned core and 
     'const e=await firebaseEnvironment(process.cwd()); ' +
     'console.log(JSON.stringify({key:e.GOOGLE_APPLICATION_CREDENTIALS,token:e.FIREBASE_TOKEN}));',
   ], { cwd: destination, env: { ...f.env, FIREBASE_TOKEN: 'cached-human-token' }, encoding: 'utf8' })
-  const savedKey = await realpath(join(destination, '.git/firebase-auth/service-account.json'))
+  const savedKey = await realpath(join(f.env.HOME, '.config/experiment-template/firebase/student-project/service-account.json'))
   assert.equal(await realpath(JSON.parse(observed).key), savedKey)
   assert.equal(JSON.parse(observed).token, '')
 })
@@ -210,7 +213,8 @@ test('an interrupted installation preserves configured source and removes stagin
   assert.notEqual(result.code, 0)
   const destination = join(f.root, 'student-experiment')
   assert.equal((await readJson(join(destination, 'firebase.config.json'))).projectId, f.config.projectId)
-  assert.deepEqual(await readJson(join(destination, '.git/firebase-auth/service-account.json')), f.key)
+  const credentialFile = join(f.env.HOME, '.config/experiment-template/firebase/student-project/service-account.json')
+  assert.deepEqual(await readJson(credentialFile), f.key)
   assert.ok(!(await readdir(f.root)).some(name => name.startsWith('.experiment-setup-')))
   assert.ok(!(await readdir(join(destination, '.git'))).includes('student-setup-key.json'))
   assert.ok(result.stderr.includes(destination))
@@ -235,4 +239,23 @@ test('handoff generation resolves a Hosting target and refuses source-tree outpu
   assert.notEqual(overwrite.code, 0)
   assert.equal(await readFile(f.file, 'utf8'), f.text)
   assert.equal(formatHandoff(parseHandoff(f.text)), f.text)
+})
+
+test('handoff generation uses the shared home key without legacy metadata and rejects shell-only credentials', async t => {
+  const f = await fixture(t)
+  await rm(join(f.project, '.git/firebase-auth'), { recursive: true })
+  const args = ['--project', f.project, '--template', f.template, '--repository', f.template,
+    '--name', 'student-experiment', '--contact-email', 'researcher@lab.test']
+  const file = join(f.root, 'shared-key-block.txt')
+  const shared = await run(preparer, [...args, '--out', file], {
+    cwd: f.root, env: { ...f.env, HOME: join(f.root, 'home') },
+  })
+  assert.equal(shared.code, 0, shared.stderr)
+  assert.deepEqual(parseHandoff(await readFile(file, 'utf8')).serviceAccount, f.key)
+  const shell = await run(preparer, [...args, '--out', join(f.root, 'absent-key-block.txt')], {
+    cwd: f.root, env: { ...f.env, HOME: join(f.root, 'empty-home') },
+  })
+  assert.notEqual(shell.code, 0)
+  assert.ok(shell.stderr.includes('Configure a project key or supply --key'))
+  assert.ok(!`${shell.stdout}${shell.stderr}${shared.stdout}${shared.stderr}`.includes(privateKey))
 })
