@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { generateKeyPairSync } from 'node:crypto'
-import { chmod, copyFile, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, writeFile } from 'node:fs/promises'
+import { chmod, copyFile, symlink, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
@@ -11,7 +11,6 @@ import { END, formatHandoff, parseHandoff } from './create-experiment.mjs'
 const source = dirname(fileURLToPath(import.meta.url))
 const installer = join(source, 'create-experiment.mjs')
 const preparer = join(source, 'prepare-student.mjs')
-const bun = execFileSync('which', ['bun'], { encoding: 'utf8' }).trim()
 const git = execFileSync('which', ['git'], { encoding: 'utf8' }).trim()
 const keyPair = generateKeyPairSync('rsa', { modulusLength: 2048 })
 const privateKey = keyPair.privateKey.export({ type: 'pkcs8', format: 'pem' })
@@ -79,13 +78,12 @@ async function fixture(t, { firebaseInstalled = true } = {}) {
     await writeFile(join(bin, 'firebase'), firebase)
     await chmod(join(bin, 'firebase'), 0o755)
   }
-  await writeFile(join(bin, 'bun'), `#!${process.execPath}
+  await symlink(process.execPath, join(bin, 'node'))
+  await writeFile(join(bin, 'npm'), `#!${process.execPath}
 const fs = require('node:fs');
-const cp = require('node:child_process');
 const path = require('node:path');
 const args = process.argv.slice(2);
 if (args[0] === '--version') process.exit(0);
-if (args[0] === '--eval') process.exit(cp.spawnSync(${JSON.stringify(bun)}, args, { stdio: 'inherit' }).status);
 fs.appendFileSync(process.env.SETUP_TEST_LOG, JSON.stringify(args) + '\\n');
 if (args[0] === 'install' && args.includes('--global')) {
   fs.writeFileSync(path.join(process.env.SETUP_TEST_BIN, 'firebase'), ${JSON.stringify(firebase)}, { mode: 0o755 });
@@ -94,9 +92,9 @@ if (args[0] === 'install' && args.includes('--global')) {
 if (JSON.parse(fs.readFileSync('firebase.config.json')).projectId !== 'student-project') process.exit(20);
 const credential = JSON.parse(fs.readFileSync('.git/firebase-auth/service-account.json'));
 if (credential.project_id !== 'student-project') process.exit(21);
-if (process.env.SETUP_TEST_FAIL === '1' && args[0] === 'install') process.exit(22);
+if (process.env.SETUP_TEST_FAIL === '1' && args[0] === 'ci') process.exit(22);
 `)
-  await chmod(join(bin, 'bun'), 0o755)
+  await chmod(join(bin, 'npm'), 0o755)
   const file = join(root, 'student-block.txt')
   const prepared = await run(preparer, ['--project', project, '--template', template, '--repository', template,
     '--name', 'student-experiment', '--contact-email', 'researcher@lab.test', '--out', file], { cwd: root, env })
@@ -132,9 +130,9 @@ test('a generated block creates a clean project from stdin with pinned core and 
   assert.ok(!`${result.stdout}${result.stderr}`.includes(privateKey))
   assert.equal(f.gitRun(f.project, 'status', '--porcelain'), before)
   assert.deepEqual((await readFile(f.log, 'utf8')).trim().split('\n').map(JSON.parse), [
-    ['install', '--frozen-lockfile'], ['run', 'typecheck'],
+    ['ci'], ['run', 'typecheck'],
   ])
-  const observed = execFileSync(bun, ['--eval',
+  const observed = execFileSync(process.execPath, ['--input-type=module', '--eval',
     'const {firebaseEnvironment}=await import("./core/operations/firebase-auth.ts");' +
     'const e=await firebaseEnvironment(process.cwd()); ' +
     'console.log(JSON.stringify({key:e.GOOGLE_APPLICATION_CREDENTIALS,token:e.FIREBASE_TOKEN}));',

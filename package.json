@@ -6,17 +6,17 @@
     "core"
   ],
   "scripts": {
-    "test": "bun test core && node --test scripts/setup.integration.test.mjs core/testing/browser.integration.mjs core/testing/agent/session.integration.mjs",
+    "test": "vitest run --config core/testing/vitest.config.mjs && node --test scripts/setup.integration.test.mjs core/testing/browser.integration.mjs core/testing/agent/session.integration.mjs",
     "test:setup": "node --test scripts/setup.integration.test.mjs",
     "test:experiments": "node core/testing/cli.mjs",
     "test:testing": "node core/testing/verify.mjs",
-    "typecheck": "bun nuxt typecheck",
+    "typecheck": "nuxt typecheck",
     "build": "nuxt build",
     "dev": "nuxt dev --port 3030",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "ops": "bun core/operations/cli.ts"
+    "ops": "node --import tsx core/operations/cli.ts"
   },
   "overrides": {
     "css-select": "5.1.0"
@@ -25,5 +25,9 @@
     "vue-tsc": "3.1.5",
     "@iconify-json/mdi": "^1.2.3",
     "unocss": "^66.3.2"
+  },
+  "engines": {
+    "node": ">=22.22.0",
+    "npm": ">=10"
   }
 }

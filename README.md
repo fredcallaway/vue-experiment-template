@@ -28,7 +28,7 @@ Read the new project's AGENTS.md, start the development server, and give me the 
 
 ### On your own
 
-Install [Git](https://git-scm.com/downloads), [Bun](https://bun.com/docs/installation), and [Node.js LTS](https://nodejs.org/en/download) if you don't have them already.
+Install [Git](https://git-scm.com/downloads), [Node.js LTS](https://nodejs.org/en/download) (22.22 or newer, including npm) if you don't have them already.
 
 Open a terminal in the folder where you keep your projects and run:
 
@@ -44,7 +44,7 @@ When prompted, paste the complete setup block, including its BEGIN and END lines
 Open the new project folder in a terminal or text editor and start the app:
 
 ```bash
-bun run dev
+npm run dev
 ```
 
 Open the local URL printed in the terminal. The app includes:
