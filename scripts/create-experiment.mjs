@@ -98,13 +98,9 @@ async function readPastedBlock() {
 
 export async function createExperiment(block, destination = resolve(block.name)) {
   validateHandoff(block)
-  if (Number(process.versions.node.split('.')[0]) < 22
-    || (process.versions.node.startsWith('22.') && Number(process.versions.node.split('.')[1]) < 22)) {
-    throw new Error('Install Node.js LTS 22.22 or newer before running experiment setup')
-  }
   destination = resolve(destination)
   if (existsSync(destination)) throw new Error(`Destination already exists: ${destination}. Choose a new folder.`)
-  for (const executable of ['git', 'npm']) {
+  for (const executable of ['git', 'bun']) {
     if (spawnSync(executable, ['--version'], { stdio: 'ignore' }).status !== 0) {
       throw new Error(`Install ${executable} before running experiment setup`)
     }
@@ -155,28 +151,28 @@ export async function createExperiment(block, destination = resolve(block.name))
     const keyFile = join(destination, '.git', 'student-setup-key.json')
     try {
       await writeFile(keyFile, JSON.stringify(block.serviceAccount), { mode: 0o600, flag: 'wx' })
-      command(destination, process.execPath, ['--input-type=module', '--eval',
+      command(destination, 'bun', ['--eval',
         'const {configureFirebaseCredentials} = await import("./core/operations/firebase-auth.ts"); ' +
         'await configureFirebaseCredentials(process.cwd(), process.argv[1]);', keyFile])
     } finally {
       await rm(keyFile, { force: true })
     }
-    for (const args of [['ci'], ['run', 'typecheck']]) {
-      const result = spawnSync('npm', args, { cwd: destination, stdio: 'inherit' })
+    for (const args of [['install', '--frozen-lockfile'], ['run', 'typecheck']]) {
+      const result = spawnSync('bun', args, { cwd: destination, stdio: 'inherit' })
       if (result.status !== 0) {
-        throw new Error(`npm ${args.join(' ')} failed. Ask your agent to finish setup in ${destination}.`)
+        throw new Error(`bun ${args.join(' ')} failed. Ask your agent to finish setup in ${destination}.`)
       }
     }
     if (spawnSync('firebase', ['--version'], { stdio: 'ignore' }).status !== 0) {
-      const result = spawnSync('npm', ['install', '--global', 'firebase-tools@15.1.0'], { stdio: 'inherit' })
+      const result = spawnSync('bun', ['install', '--global', 'firebase-tools@15.1.0'], { stdio: 'inherit' })
       if (result.status !== 0) {
         throw new Error(`Firebase CLI installation failed. Ask your agent to finish setup in ${destination}.`)
       }
       if (spawnSync('firebase', ['--version'], { stdio: 'ignore' }).status !== 0) {
-        throw new Error('Firebase CLI is not on PATH. Ask your agent to add the npm global bin directory to PATH.')
+        throw new Error('Firebase CLI is not on PATH. Ask your agent to add the Bun global bin directory to PATH.')
       }
     }
-    console.log(`\nYour experiment is ready in ${destination}\nOpen that folder and run npm run dev.`)
+    console.log(`\nYour experiment is ready in ${destination}\nOpen that folder and run bun run dev.`)
     return destination
   } catch (error) {
     if (installed) console.error(`The configured project is preserved at ${destination}.`)
