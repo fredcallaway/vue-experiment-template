@@ -32,7 +32,7 @@ export async function prepareStudent(options) {
     site = sites[0]
   }
   const authModule = pathToFileURL(resolve(template, 'core/operations/firebase-auth.ts')).href
-  const keyFile = options.key ?? command(project, process.execPath, ['--input-type=module', '--eval',
+  const keyFile = options.key ?? command(project, 'bun', ['--eval',
     `const {resolveFirebaseCredentials} = await import(${JSON.stringify(authModule)});
      try {
        const result = await resolveFirebaseCredentials(process.cwd());
