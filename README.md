@@ -21,7 +21,7 @@ Paste this into a new chat, followed by the block from your manager:
 
 ```text
 Create my experiment using the setup instructions at
-https://github.com/fredcallaway/vue-experiment-template/blob/release/1.0/README.md#create-your-experiment
+https://github.com/fredcallaway/vue-experiment-template/blob/main/README.md#create-your-experiment
 Run the installer with the setup block below. Keep its credentials private.
 Read the new project's AGENTS.md, start the development server, and give me the local URL.
 ```
@@ -33,7 +33,7 @@ Install [Git](https://git-scm.com/downloads), [Bun](https://bun.com/docs/install
 Open a terminal in the folder where you keep your projects and run:
 
 ```bash
-curl -fsSLo create-experiment.mjs https://raw.githubusercontent.com/fredcallaway/vue-experiment-template/release/1.0/scripts/create-experiment.mjs
+curl -fsSLo create-experiment.mjs https://raw.githubusercontent.com/fredcallaway/vue-experiment-template/main/scripts/create-experiment.mjs
 node create-experiment.mjs
 ```
 
