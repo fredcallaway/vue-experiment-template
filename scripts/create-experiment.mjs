@@ -71,7 +71,9 @@ export const formatHandoff = block => `${BEGIN}\n${JSON.stringify(validateHandof
 
 export function command(cwd, executable, args) {
   try {
-    return execFileSync(executable, args, { cwd, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 }).trim()
+    return execFileSync(executable, args, {
+      cwd, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'inherit'],
+    }).trim()
   } catch {
     throw new Error(`${executable} ${args[0]} failed in ${cwd}; check the command output above`)
   }
